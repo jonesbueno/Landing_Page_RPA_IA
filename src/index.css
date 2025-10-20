@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variáveis de tema para fallback e CSS customizado pontual */
+:root {
+  --bg: #0b1020; /* fundo azul escuro com nuance roxa */
+  --primary: #5a44e9; /* roxo */
+  --accent: #2a8dff; /* azul */
+  --text: #e6e8f0; /* texto principal */
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Contêiner padrão da página */
+.container-page {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Gradientes adicionais */
+.bg-gradient-primary {
+  background-image: linear-gradient(135deg, #5a44e9 0%, #2a8dff 100%);
+}
+.bg-gradient-deep {
+  background-image: radial-gradient(800px 400px at 20% -50px, rgba(90,68,233,0.35), transparent),
+                    radial-gradient(800px 400px at 90% 0px, rgba(42,141,255,0.25), transparent);
+}
+.border-gradient {
+  position: relative;
+}
+.border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(90,68,233,0.6), rgba(42,141,255,0.6));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  padding: 1px;
+  pointer-events: none;
+}
+
+/* Animações de hover */
+.hover-elevate {
+  transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+}
+.hover-elevate:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+.hover-glow:hover {
+  box-shadow: 0 0 0 3px rgba(42,141,255,0.25), 0 0 24px rgba(90,68,233,0.25);
+}
+.btn-gradient {
+  background-image: linear-gradient(135deg, #5a44e9, #2a8dff);
+}
+.btn-gradient:hover {
+  filter: brightness(1.08);
+}
+
+/* Texto com gradiente para títulos chamativos */
+.text-gradient {
+  background-image: linear-gradient(90deg, #a78bfa 0%, #60a5fa 50%, #22d3ee 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+
+/* Badges coloridas */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  border-radius: 9999px;
+  padding: .35rem .6rem;
+  font-size: .75rem;
+  border: 1px solid rgba(255,255,255,.15);
+  background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+}
+
+/* Spotlight hover para cards marcantes */
+.spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(400px 200px at var(--mx,50%) var(--my,50%), rgba(96,165,250,0.18), transparent 60%);
+  transition: opacity .3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.spotlight:hover::after {
+  opacity: 1;
+}
+
+/* Chips e banners de resultado */
+.result-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  border-radius: .75rem;
+  font-weight: 600;
+  color: #0b1020;
+  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #22d3ee);
+  box-shadow: 0 6px 24px rgba(96,165,250,0.25);
+}
+.result-banner {
+  margin-top: .75rem;
+  padding: .6rem .9rem;
+  border-radius: .75rem;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(135deg, rgba(90,68,233,.18), rgba(42,141,255,.18));
+  color: #e6e8f0;
+}
+.underline-gradient {
+  position: relative;
+}
+.underline-gradient:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa, #22d3ee);
+  opacity: .8;
+}
+
+/* Borda em gradiente com clipping correto (sem vazamento nos cantos) */
+.gradient-border {
+  position: relative;
+  padding: 1px;               /* espessura da borda */
+  border-radius: 1rem;        /* deve casar com rounded-2xl do Tailwind */
+  background-image: var(--gbg, linear-gradient(135deg, rgba(90,68,233,.6), rgba(42,141,255,.6)));
+  overflow: hidden;           /* garante que o gradiente não vaze */
+}
+.gradient-inner {
+  border-radius: inherit;     /* cantos iguais ao container */
+  background: rgba(11,16,32,0.85);
+}
+
+/* Timeline (Como funciona) */
+.timeline {
+  position: relative;
+}
+.timeline:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(90,68,233,0.6), rgba(42,141,255,0.6));
+  border-radius: 9999px;
+}
+.timeline-item {
+  position: relative;
+}
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  height: 18px;
+  width: 18px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #5a44e9, #2a8dff);
+  box-shadow: 0 0 0 4px rgba(90,68,233,0.25);
+}
