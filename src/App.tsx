@@ -1,5 +1,5 @@
 import './index.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaRocket, FaBolt, FaShieldAlt, FaCogs, FaChartLine, FaUsers, FaRobot, FaLink, FaHeadset, FaWarehouse, FaFileInvoice, FaHandHoldingUsd, FaAward, FaGlobe, FaHandshake, FaWhatsapp } from 'react-icons/fa'
 
 type SectionProps = {
@@ -24,6 +24,55 @@ const SectionTitle = ({ title, subtitle }: { title: string, subtitle?: string })
       </div>
 )
 
+const LogoCarousel = () => {
+  const logos = [
+    { src: '/SVG/Albert.svg', alt: 'Albert Einstein', size: 'h-10' },
+    { src: '/SVG/Bradesco.svg', alt: 'Bradesco', size: 'h-10' },
+    { src: '/SVG/Carrefour.svg', alt: 'Carrefour', size: 'h-10' },
+    { src: '/SVG/CNN.svg', alt: 'CNN', size: 'h-8' },
+    { src: '/SVG/Embraer.svg', alt: 'Embraer', size: 'h-8' },
+    { src: '/SVG/Friboi.svg', alt: 'Friboi', size: 'h-8' },
+    { src: '/SVG/Itau_1.svg', alt: 'Itaú', size: 'h-10' },
+    { src: '/SVG/Magalu.svg', alt: 'Magalu', size: 'h-8' },
+    { src: '/SVG/Sequoia.svg', alt: 'Sequoia', size: 'h-8' },
+  ]
+
+  return (
+    <div className="relative overflow-hidden mt-8">
+      {/* Gradiente nas bordas para efeito fade */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[--bg] to-transparent z-10"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[--bg] to-transparent z-10"></div>
+      
+      <div className="flex animate-scroll">
+        {/* Primeira linha de logos */}
+        <div className="flex items-center space-x-12 flex-shrink-0">
+          {logos.map((logo, index) => (
+            <div key={`first-${index}`} className="flex items-center justify-center h-12 w-32">
+              <img 
+                src={logo.src} 
+                alt={logo.alt}
+                className={`${logo.size} w-auto opacity-40 hover:opacity-70 transition-all duration-300 filter grayscale hover:grayscale-0`}
+              />
+            </div>
+          ))}
+        </div>
+        {/* Segunda linha de logos (duplicada para efeito infinito) */}
+        <div className="flex items-center space-x-12 flex-shrink-0">
+          {logos.map((logo, index) => (
+            <div key={`second-${index}`} className="flex items-center justify-center h-12 w-32">
+              <img 
+                src={logo.src} 
+                alt={logo.alt}
+                className={`${logo.size} w-auto opacity-40 hover:opacity-70 transition-all duration-300 filter grayscale hover:grayscale-0`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const Hero = () => (
   <header className="relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-deep" />
@@ -34,19 +83,30 @@ const Hero = () => (
         </span>
         <h1 className="mt-5 text-4xl md:text-6xl font-extrabold leading-[1.1] text-white">
           <span className="block md:whitespace-nowrap">Sua Empresa Perde Dinheiro</span>
-          <span className="block md:whitespace-nowrap">com Processos Manuais?</span>
+          <span className="block md:whitespace-nowrap">com <span className="text-gradient">Processos Manuais</span>?</span>
         </h1>
         <p className="mt-4 md:mt-6 text-lg md:text-xl text-white/85 max-w-2xl mx-auto">
           Automatize tarefas repetitivas e transforme sua operação com RPA + Inteligência Artificial
         </p>
         <div className="mt-6 md:mt-8 flex flex-wrap gap-4 justify-center">
           <Button href="#contato">Quero Reduzir Custos Agora</Button>
-          <Button href="#como-funciona" variant="secondary">Como funciona</Button>
+          <Button href="#problemas" variant="secondary">Como funciona?</Button>
         </div>
+      </div>
+      
+      {/* Seção de logos integrada */}
+      <div className="mt-16 md:mt-20">
+        <div className="text-center mb-6">
+          <p className="text-sm md:text-base text-white/70 font-medium">
+            Automatizamos processos e entregamos resultados reais para grandes players do mercado como
+          </p>
+        </div>
+        <LogoCarousel />
       </div>
     </div>
   </header>
 )
+
 
 const Problems = () => (
   <section id="problemas" className="container-page py-14 md:py-20">
@@ -76,8 +136,22 @@ const Problems = () => (
 )
 
 const Solution = () => (
-  <section id="solucao" className="relative">
+  <section id="solucao" className="relative overflow-hidden">
     <div className="absolute inset-0 bg-section-gradient/50" />
+    
+    {/* Imagem de fundo do processo com perspectiva */}
+    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2/3 h-full opacity-10 pointer-events-none">
+      <img 
+        src="/rpa_process.png" 
+        alt="Fluxo de processo RPA" 
+        className="w-full h-full object-contain"
+        style={{ 
+          transform: 'rotate(-8deg) scale(1.2)',
+          filter: 'blur(1px)'
+        }}
+      />
+    </div>
+    
     <div className="container-page relative py-14 md:py-20">
       <SectionTitle
         title="A solução que sua empresa precisa"
@@ -238,7 +312,12 @@ const UseCases = () => {
 }
 
 const Stats = () => (
-  <section className="container-page py-12">
+  <section className="container-page py-14 md:py-20">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gradient">
+        Estes números podem ser os da sua empresa
+      </h2>
+    </div>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
       {[
         ['30%', 'Redução de Custos'],
@@ -251,6 +330,9 @@ const Stats = () => (
           <div className="text-white/80">{l}</div>
         </div>
       ))}
+    </div>
+    <div className="mt-10 text-center">
+      <Button href="#contato">Quero Esses Resultados</Button>
     </div>
   </section>
 )

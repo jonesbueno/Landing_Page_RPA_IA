@@ -186,3 +186,21 @@ body {
   background: linear-gradient(135deg, #5a44e9, #2a8dff);
   box-shadow: 0 0 0 4px rgba(90,68,233,0.25);
 }
+
+/* Animações do carrossel de logos */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
