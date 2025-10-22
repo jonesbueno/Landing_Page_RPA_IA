@@ -26,28 +26,28 @@ const SectionTitle = ({ title, subtitle }: { title: string, subtitle?: string })
 
 const LogoCarousel = () => {
   const logos = [
-    { src: '/SVG/Albert.svg', alt: 'Albert Einstein', size: 'h-10' },
-    { src: '/SVG/Bradesco.svg', alt: 'Bradesco', size: 'h-10' },
-    { src: '/SVG/Carrefour.svg', alt: 'Carrefour', size: 'h-10' },
-    { src: '/SVG/CNN.svg', alt: 'CNN', size: 'h-8' },
-    { src: '/SVG/Embraer.svg', alt: 'Embraer', size: 'h-8' },
-    { src: '/SVG/Friboi.svg', alt: 'Friboi', size: 'h-8' },
-    { src: '/SVG/Itau_1.svg', alt: 'Itaú', size: 'h-10' },
-    { src: '/SVG/Magalu.svg', alt: 'Magalu', size: 'h-8' },
-    { src: '/SVG/Sequoia.svg', alt: 'Sequoia', size: 'h-8' },
+    { src: '/SVG/Albert.svg', alt: 'Albert Einstein', size: 'h-6 sm:h-8 md:h-10' },
+    { src: '/SVG/Bradesco.svg', alt: 'Bradesco', size: 'h-6 sm:h-8 md:h-10' },
+    { src: '/SVG/Carrefour.svg', alt: 'Carrefour', size: 'h-6 sm:h-8 md:h-10' },
+    { src: '/SVG/CNN.svg', alt: 'CNN', size: 'h-5 sm:h-6 md:h-8' },
+    { src: '/SVG/Embraer.svg', alt: 'Embraer', size: 'h-5 sm:h-6 md:h-8' },
+    { src: '/SVG/Friboi.svg', alt: 'Friboi', size: 'h-5 sm:h-6 md:h-8' },
+    { src: '/SVG/Itau_1.svg', alt: 'Itaú', size: 'h-6 sm:h-8 md:h-10' },
+    { src: '/SVG/Magalu.svg', alt: 'Magalu', size: 'h-5 sm:h-6 md:h-8' },
+    { src: '/SVG/Sequoia.svg', alt: 'Sequoia', size: 'h-5 sm:h-6 md:h-8' },
   ]
 
   return (
-    <div className="relative overflow-hidden mt-8">
+    <div className="relative overflow-hidden mt-4 sm:mt-6 md:mt-8">
       {/* Gradiente nas bordas para efeito fade */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[--bg] to-transparent z-10"></div>
-      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[--bg] to-transparent z-10"></div>
+      <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 md:w-16 bg-gradient-to-r from-[--bg] to-transparent z-10"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 md:w-16 bg-gradient-to-l from-[--bg] to-transparent z-10"></div>
       
       <div className="flex animate-scroll">
         {/* Primeira linha de logos */}
-        <div className="flex items-center space-x-12 flex-shrink-0">
+        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-12 flex-shrink-0">
           {logos.map((logo, index) => (
-            <div key={`first-${index}`} className="flex items-center justify-center h-12 w-32">
+            <div key={`first-${index}`} className="flex items-center justify-center h-8 sm:h-10 md:h-12 w-20 sm:w-24 md:w-32">
               <img 
                 src={logo.src} 
                 alt={logo.alt}
@@ -57,9 +57,9 @@ const LogoCarousel = () => {
           ))}
         </div>
         {/* Segunda linha de logos (duplicada para efeito infinito) */}
-        <div className="flex items-center space-x-12 flex-shrink-0">
+        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-12 flex-shrink-0">
           {logos.map((logo, index) => (
-            <div key={`second-${index}`} className="flex items-center justify-center h-12 w-32">
+            <div key={`second-${index}`} className="flex items-center justify-center h-8 sm:h-10 md:h-12 w-20 sm:w-24 md:w-32">
               <img 
                 src={logo.src} 
                 alt={logo.alt}
@@ -81,9 +81,10 @@ const Hero = () => (
         <span className="badge mx-auto">
           <span className="h-2 w-2 rounded-full bg-[--accent]" /> RPA + IA para sua operação
         </span>
-        <h1 className="mt-5 text-4xl md:text-6xl font-extrabold leading-[1.1] text-white">
-          <span className="block md:whitespace-nowrap">Sua Empresa Perde Dinheiro</span>
-          <span className="block md:whitespace-nowrap">com <span className="text-gradient">Processos Manuais</span>?</span>
+        <h1 className="mt-5 text-3xl sm:text-4xl md:text-6xl font-extrabold leading-[1.1] text-white">
+          <span className="block">Sua Empresa</span>
+          <span className="block">Perde Dinheiro com</span>
+          <span className="block"><span className="text-gradient">Processos Manuais</span>?</span>
         </h1>
         <p className="mt-4 md:mt-6 text-lg md:text-xl text-white/85 max-w-2xl mx-auto">
           Automatize tarefas repetitivas e transforme sua operação com RPA + Inteligência Artificial
@@ -95,9 +96,9 @@ const Hero = () => (
       </div>
       
       {/* Seção de logos integrada */}
-      <div className="mt-16 md:mt-20">
-        <div className="text-center mb-6">
-          <p className="text-sm md:text-base text-white/70 font-medium">
+      <div className="mt-12 sm:mt-16 md:mt-20">
+        <div className="text-center mb-4 sm:mb-6">
+          <p className="text-xs sm:text-sm md:text-base text-white/70 font-medium px-4">
             Automatizamos processos e entregamos resultados reais para grandes players do mercado como
           </p>
         </div>
@@ -472,11 +473,11 @@ const WhyEdesoft = () => (
           </div>
         ))}
       </div>
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
+      <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 items-stretch">
         {[['19', 'Anos de Experiência'], ['200+', 'Projetos Entregues'], ['50+', 'Clientes Ativos'], ['95%', 'Taxa de Satisfação']].map(([n, l]) => (
-          <div key={n} className="rounded-xl border border-white/10 bg-white/5 p-6 text-center hover-elevate">
-            <div className="text-3xl font-extrabold text-white">{n}</div>
-            <div className="text-white/80">{l}</div>
+          <div key={n} className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 text-center hover-elevate flex flex-col justify-center min-h-[120px] sm:min-h-[140px]">
+            <div className="text-2xl sm:text-3xl font-extrabold text-white mb-2">{n}</div>
+            <div className="text-xs sm:text-sm text-white/80 leading-tight">{l}</div>
           </div>
         ))}
       </div>
@@ -620,7 +621,7 @@ const Contact = () => {
           title="Pronto Para Automatizar Sua Operação?"
           subtitle="Agende uma conversa sem compromisso e descubra como podemos reduzir seus custos"
         />
-        <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto text-center">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto px-4 md:px-0">
           {/* Campos obrigatórios do Web3Forms */}
           <input type="hidden" name="access_key" value="24d4a369-8386-471f-8132-be5cc6b877b2" />
           <input type="hidden" name="subject" value="Novo Lead - Landing Page RPA + IA" />
@@ -632,8 +633,8 @@ const Contact = () => {
           {/* Configuração de autoresponder */}
           <input type="hidden" name="autoresponse" value="Obrigado pelo seu interesse!" />
           
-          <div className="col-span-2 md:col-span-1">
-            <label className="block text-sm text-white/80 mb-1 text-left">Nome Completo</label>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">Nome Completo</label>
             <input 
               type="text" 
               name="name" 
@@ -642,8 +643,8 @@ const Contact = () => {
             />
           </div>
           
-          <div className="col-span-2 md:col-span-1">
-            <label className="block text-sm text-white/80 mb-1 text-left">Empresa</label>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">Empresa</label>
             <input 
               type="text" 
               name="company" 
@@ -652,8 +653,8 @@ const Contact = () => {
             />
           </div>
           
-          <div className="col-span-2 md:col-span-1">
-            <label className="block text-sm text-white/80 mb-1 text-left">Cargo</label>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">Cargo</label>
             <input 
               type="text" 
               name="position" 
@@ -662,8 +663,8 @@ const Contact = () => {
             />
           </div>
           
-          <div className="col-span-2 md:col-span-1">
-            <label className="block text-sm text-white/80 mb-1 text-left">E-mail Corporativo</label>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">E-mail Corporativo</label>
             <input 
               type="email" 
               name="email" 
@@ -672,8 +673,8 @@ const Contact = () => {
             />
           </div>
           
-          <div className="col-span-2 md:col-span-1">
-            <label className="block text-sm text-white/80 mb-1 text-left">Telefone</label>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">Telefone</label>
             <input 
               type="tel" 
               name="phone" 
@@ -682,34 +683,34 @@ const Contact = () => {
             />
           </div>
           
-          <div className="md:col-span-2">
-            <label className="block text-sm text-white/80 mb-1 text-left">Qual seu maior desafio operacional hoje?</label>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">Qual seu maior desafio operacional hoje?</label>
             <textarea 
               name="message" 
               required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent] resize-none" 
               rows={4} 
             />
           </div>
           
           {/* Mensagens de feedback */}
           {submitStatus === 'success' && (
-            <div className="md:col-span-2 rounded-lg bg-green-500/20 border border-green-500/50 p-4 text-green-100">
+            <div className="col-span-1 md:col-span-2 rounded-lg bg-green-500/20 border border-green-500/50 p-4 text-green-100 text-sm">
               ✅ Mensagem enviada com sucesso! Em breve um especialista entrará em contato.
             </div>
           )}
           
           {submitStatus === 'error' && (
-            <div className="md:col-span-2 rounded-lg bg-red-500/20 border border-red-500/50 p-4 text-red-100">
+            <div className="col-span-1 md:col-span-2 rounded-lg bg-red-500/20 border border-red-500/50 p-4 text-red-100 text-sm">
               ❌ Erro ao enviar mensagem. Por favor, tente novamente ou entre em contato via WhatsApp.
             </div>
           )}
           
-          <div className="md:col-span-2 flex justify-center">
+          <div className="col-span-1 md:col-span-2 flex justify-center mt-4">
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className={`inline-block rounded-lg btn-gradient hover-glow text-white px-6 py-3 text-sm font-semibold shadow-md shadow-black/20 hover-elevate ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-full sm:w-auto inline-block rounded-lg btn-gradient hover-glow text-white px-6 py-3 text-sm font-semibold shadow-md shadow-black/20 hover-elevate ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isSubmitting ? 'Enviando...' : 'Quero uma Consultoria Gratuita'}
             </button>
