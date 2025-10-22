@@ -208,7 +208,7 @@ const Pillars = () => (
 const UseCases = () => {
   const cases = [
     {
-      key: 'financeiro',
+      key: 'financeiro' as const,
       title: 'Financeiro e Contabilidade',
       icon: <FaFileInvoice />,
       color: 'from-[#a78bfa] to-[#60a5fa]',
@@ -221,7 +221,7 @@ const UseCases = () => {
       result: '70% menos tempo de fechamento e 95% menos erros.',
     },
     {
-      key: 'atendimento',
+      key: 'atendimento' as const,
       title: 'Atendimento ao Cliente',
       icon: <FaHeadset />,
       color: 'from-[#60a5fa] to-[#22d3ee]',
@@ -234,7 +234,7 @@ const UseCases = () => {
       result: '60% menos chamados e +40% em satisfação.',
     },
     {
-      key: 'rh',
+      key: 'rh' as const,
       title: 'Recursos Humanos',
       icon: <FaUsers />,
       color: 'from-[#22d3ee] to-[#5eead4]',
@@ -247,7 +247,7 @@ const UseCases = () => {
       result: '50% menos tempo de contratação e 80% menos trabalho manual.',
     },
     {
-      key: 'operacoes',
+      key: 'operacoes' as const,
       title: 'Operações e Logística',
       icon: <FaWarehouse />,
       color: 'from-[#5a44e9] to-[#2a8dff]',
@@ -259,9 +259,10 @@ const UseCases = () => {
       ],
       result: '35% menos custos e 90% de precisão de estoque.',
     },
-  ] as const
+  ]
 
-  const [active, setActive] = useState(cases[0].key)
+  type CaseKey = typeof cases[number]['key']
+  const [active, setActive] = useState<CaseKey>('financeiro')
   const activeCase = cases.find(c => c.key === active)!
 
   return (
@@ -294,8 +295,8 @@ const UseCases = () => {
             <div className="grid md:grid-cols-2 gap-4 mt-4">
               {activeCase.items.map(i => (
                 <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[--accent]"></span>
+                  <div className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[--accent]"></span>
                     <span className="text-white/85">{i}</span>
                   </div>
                 </div>
@@ -348,8 +349,6 @@ const Benefits = () => (
           { t: 'Economia Real', d: 'Reduza custos operacionais em até 30% nos primeiros meses', icon: <FaHandHoldingUsd /> },
           { t: 'Precisão', d: 'Elimine erros humanos e garanta qualidade consistente', icon: <FaShieldAlt /> },
           { t: 'Escalabilidade', d: 'Cresça sem precisar aumentar proporcionalmente seu time', icon: <FaChartLine /> },
-          { t: 'Conformidade', d: 'Mantenha processos seguros e adequados à LGPD', icon: <FaShieldAlt /> },
-          { t: 'Equipe Focada', d: 'Seu time pode se dedicar ao que realmente gera valor', icon: <FaUsers /> },
           { t: 'Inovação Contínua', d: 'Libere recursos para investir em projetos estratégicos', icon: <FaRocket /> },
           { t: 'Satisfação do Cliente', d: 'Atendimento mais rápido e personalizado', icon: <FaHeadset /> },
         ].map((b) => (
@@ -373,28 +372,70 @@ const HowItWorks = () => (
   <section id="como-funciona" className="relative">
     <div className="container-page py-14 md:py-20">
       <SectionTitle title="Como funciona nossa implementação" />
-      <div className="timeline">
-        <div className="grid md:grid-cols-2 gap-10">
+      
+      {/* Layout em fluxo vertical moderno */}
+      <div className="relative max-w-4xl mx-auto">
+        {/* Linha de fluxo vertical animada (visível apenas em desktop) */}
+        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 -translate-x-1/2 flow-line rounded-full" 
+             style={{ height: 'calc(100% - 80px)', top: '40px' }} />
+        
+        <div className="space-y-6">
           {[
-            ['Diagnóstico Gratuito', 'Analisamos seus processos e identificamos oportunidades de alto ROI.'],
-            ['Planejamento Personalizado', 'Roadmap sob medida com prioridades e projeção de resultados.'],
-            ['Desenvolvimento Ágil', 'Entregas incrementais com valor desde a primeira semana.'],
-            ['Testes e Ajustes', 'Validação em ambiente controlado com feedback do seu time.'],
-            ['Go Live e Treinamento', 'Operação e treinamento para monitoramento eficaz.'],
-            ['Suporte e Evolução', 'Acompanhamento contínuo e evolução das automações.'],
-          ].map(([t, d], idx) => (
-            <div key={t as string} className="timeline-item relative">
-              <div className={`rounded-2xl p-[1px] bg-gradient-to-r ${idx % 2 === 0 ? 'from-[#a78bfa] to-[#60a5fa]' : 'from-[#22d3ee] to-[#2a8dff]'} mt-8`}>
-                <div className="rounded-2xl bg-[#0b1020]/85 border border-white/10 p-6">
-                  <div className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[--accent] text-black font-extrabold">{idx + 1}</div>
-                  <h3 className="text-xl font-bold text-white mt-3">{t}</h3>
-                  <p className="text-white/80 mt-2">{d as string}</p>
+            { title: 'Diagnóstico', desc: 'Analisamos seus processos e identificamos oportunidades de alto ROI.', icon: '🔍', color: 'from-[#a78bfa] to-[#60a5fa]' },
+            { title: 'Planejamento Personalizado', desc: 'Roadmap sob medida com prioridades e projeção de resultados.', icon: '📋', color: 'from-[#60a5fa] to-[#22d3ee]' },
+            { title: 'Desenvolvimento Ágil', desc: 'Entregas incrementais com valor desde a primeira semana.', icon: '⚡', color: 'from-[#22d3ee] to-[#5eead4]' },
+            { title: 'Testes e Ajustes', desc: 'Validação em ambiente controlado com feedback do seu time.', icon: '🔧', color: 'from-[#5eead4] to-[#2a8dff]' },
+            { title: 'Go Live e Treinamento', desc: 'Operação e treinamento para monitoramento eficaz.', icon: '🚀', color: 'from-[#2a8dff] to-[#5a44e9]' },
+            { title: 'Suporte e Evolução', desc: 'Acompanhamento contínuo e evolução das automações.', icon: '📈', color: 'from-[#5a44e9] to-[#a78bfa]' },
+          ].map((step, idx) => (
+            <div key={step.title} className="relative flow-step">
+              {/* Card do passo */}
+              <div className={`relative ${idx % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'} md:w-[calc(50%-2rem)]`}>
+                <div className={`rounded-2xl p-[2px] bg-gradient-to-r ${step.color} hover-elevate`}>
+                  <div className="rounded-2xl bg-[#0b1020]/95 p-6 relative overflow-hidden">
+                    {/* Efeito de brilho no fundo */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                    
+                    <div className="relative flex items-start gap-4">
+                      {/* Número do passo */}
+                      <div className="flex-shrink-0">
+                        <div className={`h-12 w-12 rounded-xl bg-gradient-to-r ${step.color} flex items-center justify-center text-2xl font-bold text-white shadow-lg`}>
+                          {idx + 1}
+                        </div>
+                      </div>
+                      
+                      {/* Conteúdo */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl">{step.icon}</span>
+                          <h3 className="text-xl font-bold text-white">{step.title}</h3>
+                        </div>
+                        <p className="text-white/80 leading-relaxed">{step.desc}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                
+                {/* Ponto de conexão na linha central com pulso (apenas desktop) */}
+                <div className="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-[#5a44e9] to-[#2a8dff] border-4 border-[#0b1020] shadow-lg flow-dot"
+                     style={{ 
+                       [idx % 2 === 0 ? 'left' : 'right']: 'calc(100% + 1rem)'
+                     }} />
               </div>
+              
+              {/* Seta conectora (mobile) */}
+              {idx < 5 && (
+                <div className="md:hidden flex justify-center py-2">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#2a8dff]">
+                    <path d="M12 5V19M12 19L19 12M12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
+      
       <div className="mt-10 text-center">
         <Button href="#contato">Quero Começar Agora</Button>
       </div>
@@ -411,7 +452,7 @@ const WhyEdesoft = () => (
         subtitle="19 anos transformando TI em ativo de negócio"
       />
       <div className="flex items-center justify-center mt-4 mb-8">
-        <img src="/Logo Edesoft/LOGO EDESOFT BRANCA.svg" alt="Logo Edesoft" className="h-14 md:h-16 opacity-95" />
+        <img src="/logo-edesoft.svg" alt="Logo Edesoft" className="h-14 md:h-16 opacity-95" />
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
@@ -440,11 +481,63 @@ const WhyEdesoft = () => (
         ))}
       </div>
       <div className="mt-10 flex items-center justify-center">
-        <Button href="#sobre">Conhecer a Edesoft</Button>
+        <a href="https://edesoft.com.br" target="_blank" rel="noreferrer">
+          <Button>Conhecer a Edesoft</Button>
+        </a>
       </div>
     </div>
   </section>
 )
+
+const VideoSection = () => {
+  useEffect(() => {
+    // Carrega o script do Vimeo Player API se ainda não estiver carregado
+    if (!document.querySelector('script[src="https://player.vimeo.com/api/player.js"]')) {
+      const script = document.createElement('script')
+      script.src = 'https://player.vimeo.com/api/player.js'
+      script.async = true
+      document.head.appendChild(script)
+    }
+  }, [])
+
+  return (
+    <section id="video" className="relative">
+      <div className="absolute inset-0 bg-section-gradient/50" />
+      <div className="container-page relative py-14 md:py-20">
+        <SectionTitle
+          title='"Meu vendedor não preenchia o CRM"'
+          subtitle="Veja como implementamos uma solução de agente de IA personalizado que transformou áudios de WhatsApp em dados estruturados no CRM"
+        />
+        
+        <div className="max-w-4xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black/20 backdrop-blur-sm border border-white/10">
+            <div style={{padding:'56.25% 0 0 0', position:'relative'}}>
+              <iframe 
+                src="https://player.vimeo.com/video/1129682251?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1" 
+                frameBorder="0" 
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+                referrerPolicy="strict-origin-when-cross-origin" 
+                style={{position:'absolute', top:0, left:0, width:'100%', height:'100%'}} 
+                title='"Meu vendedor não preenchia o CRM"'
+              />
+            </div>
+          </div>
+          
+          <div className="mt-8 text-center">
+            <p className="text-white/80 text-lg max-w-2xl mx-auto">
+              Este é apenas um exemplo de como nossa tecnologia pode transformar processos manuais em automações inteligentes. 
+              <span className="text-white font-semibold"> Imagine o que podemos fazer pela sua empresa.</span>
+            </p>
+          </div>
+          
+          <div className="mt-8 text-center">
+            <Button href="#contato">Quero uma Solução Personalizada</Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 const FAQ = () => (
   <section id="faq" className="container-page py-14 md:py-20">
@@ -473,38 +566,159 @@ const FAQ = () => (
   </section>
 )
 
-const Contact = () => (
-  <section id="contato" className="relative">
-    <div className="absolute inset-0 bg-gradient-deep opacity-80" />
-    <div className="container-page relative py-14 md:py-20">
-      <SectionTitle
-        title="Pronto Para Automatizar Sua Operação?"
-        subtitle="Agende uma conversa sem compromisso e descubra como podemos reduzir seus custos"
-      />
-      <form className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto text-center">
-      {[
-        ['Nome Completo', 'text'],
-        ['Empresa', 'text'],
-        ['Cargo', 'text'],
-        ['E-mail Corporativo', 'email'],
-        ['Telefone', 'tel'],
-      ].map(([label, type]) => (
-        <div key={label as string} className="col-span-2 md:col-span-1">
-          <label className="block text-sm text-white/80 mb-1 text-left">{label}</label>
-          <input type={type as string} className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" placeholder="" />
-        </div>
-      ))}
-        <div className="md:col-span-2">
-        <label className="block text-sm text-white/80 mb-1 text-left">Qual seu maior desafio operacional hoje?</label>
-          <textarea className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" rows={4} />
-        </div>
-        <div className="md:col-span-2 flex justify-center">
-          <Button>Quero uma Consultoria Gratuita</Button>
-        </div>
-      </form>
-    </div>
-  </section>
-)
+const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    // Salvar referência ao formulário antes da operação assíncrona
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    
+    // Converter FormData para objeto JSON
+    const formDataObj: Record<string, string> = {}
+    formData.forEach((value, key) => {
+      formDataObj[key] = value.toString()
+    })
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formDataObj),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setSubmitStatus('success')
+        form.reset()
+      } else {
+        setSubmitStatus('error')
+        console.error('Erro do Web3Forms:', data)
+      }
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <section id="contato" className="relative">
+      <div className="absolute inset-0 bg-gradient-deep opacity-80" />
+      <div className="container-page relative py-14 md:py-20">
+        <SectionTitle
+          title="Pronto Para Automatizar Sua Operação?"
+          subtitle="Agende uma conversa sem compromisso e descubra como podemos reduzir seus custos"
+        />
+        <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto text-center">
+          {/* Campos obrigatórios do Web3Forms */}
+          <input type="hidden" name="access_key" value="24d4a369-8386-471f-8132-be5cc6b877b2" />
+          <input type="hidden" name="subject" value="Novo Lead - Landing Page RPA + IA" />
+          <input type="hidden" name="from_name" value="Landing Page Edesoft" />
+          
+          {/* Proteção anti-spam */}
+          <input type="checkbox" name="botcheck" className="hidden" />
+          
+          {/* Configuração de autoresponder */}
+          <input type="hidden" name="autoresponse" value="Obrigado pelo seu interesse!" />
+          
+          <div className="col-span-2 md:col-span-1">
+            <label className="block text-sm text-white/80 mb-1 text-left">Nome Completo</label>
+            <input 
+              type="text" 
+              name="name" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+            />
+          </div>
+          
+          <div className="col-span-2 md:col-span-1">
+            <label className="block text-sm text-white/80 mb-1 text-left">Empresa</label>
+            <input 
+              type="text" 
+              name="company" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+            />
+          </div>
+          
+          <div className="col-span-2 md:col-span-1">
+            <label className="block text-sm text-white/80 mb-1 text-left">Cargo</label>
+            <input 
+              type="text" 
+              name="position" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+            />
+          </div>
+          
+          <div className="col-span-2 md:col-span-1">
+            <label className="block text-sm text-white/80 mb-1 text-left">E-mail Corporativo</label>
+            <input 
+              type="email" 
+              name="email" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+            />
+          </div>
+          
+          <div className="col-span-2 md:col-span-1">
+            <label className="block text-sm text-white/80 mb-1 text-left">Telefone</label>
+            <input 
+              type="tel" 
+              name="phone" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <label className="block text-sm text-white/80 mb-1 text-left">Qual seu maior desafio operacional hoje?</label>
+            <textarea 
+              name="message" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+              rows={4} 
+            />
+          </div>
+          
+          {/* Mensagens de feedback */}
+          {submitStatus === 'success' && (
+            <div className="md:col-span-2 rounded-lg bg-green-500/20 border border-green-500/50 p-4 text-green-100">
+              ✅ Mensagem enviada com sucesso! Em breve um especialista entrará em contato.
+            </div>
+          )}
+          
+          {submitStatus === 'error' && (
+            <div className="md:col-span-2 rounded-lg bg-red-500/20 border border-red-500/50 p-4 text-red-100">
+              ❌ Erro ao enviar mensagem. Por favor, tente novamente ou entre em contato via WhatsApp.
+            </div>
+          )}
+          
+          <div className="md:col-span-2 flex justify-center">
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className={`inline-block rounded-lg btn-gradient hover-glow text-white px-6 py-3 text-sm font-semibold shadow-md shadow-black/20 hover-elevate ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {isSubmitting ? 'Enviando...' : 'Quero uma Consultoria Gratuita'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  )
+}
 
 const Footer = () => (
   <footer className="relative mt-10 border-t border-white/10 overflow-hidden">
@@ -527,6 +741,7 @@ export default function App({}: SectionProps) {
       <Benefits />
       <HowItWorks />
       <WhyEdesoft />
+      <VideoSection />
       <FAQ />
       <Contact />
       <Footer />
