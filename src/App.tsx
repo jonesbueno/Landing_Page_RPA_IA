@@ -77,14 +77,16 @@ const Hero = () => (
   <header className="relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-deep" />
     <div className="container-page relative pt-20 pb-16 md:pt-28 md:pb-24">
-      <div className="max-w-3xl mx-auto text-center min-h-[60vh] flex flex-col items-center justify-center">
+      <div className="max-w-4xl lg:max-w-5xl mx-auto text-center min-h-[60vh] flex flex-col items-center justify-center">
         <span className="badge mx-auto">
           <span className="h-2 w-2 rounded-full bg-[--accent]" /> RPA + IA para sua operação
         </span>
         <h1 className="mt-5 text-3xl sm:text-4xl md:text-6xl font-extrabold leading-[1.1] text-white">
-          <span className="block">Sua Empresa</span>
-          <span className="block">Perde Dinheiro com</span>
-          <span className="block"><span className="text-gradient">Processos Manuais</span>?</span>
+          <span className="block lg:hidden">Sua Empresa</span>
+          <span className="block lg:hidden">Perde Dinheiro com</span>
+          <span className="block lg:hidden"><span className="text-gradient">Processos Manuais</span>?</span>
+          <span className="hidden lg:block">Sua Empresa Perde Dinheiro</span>
+          <span className="hidden lg:block">com <span className="text-gradient">Processos Manuais</span>?</span>
         </h1>
         <p className="mt-4 md:mt-6 text-lg md:text-xl text-white/85 max-w-2xl mx-auto">
           Automatize tarefas repetitivas e transforme sua operação com RPA + Inteligência Artificial
@@ -514,7 +516,7 @@ const VideoSection = () => {
           <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black/20 backdrop-blur-sm border border-white/10">
             <div style={{padding:'56.25% 0 0 0', position:'relative'}}>
               <iframe 
-                src="https://player.vimeo.com/video/1129682251?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1" 
+                src="https://player.vimeo.com/video/1129682251?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1" 
                 frameBorder="0" 
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
                 referrerPolicy="strict-origin-when-cross-origin" 
