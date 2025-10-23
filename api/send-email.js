@@ -38,14 +38,11 @@ export default async (req, res) => {
   // Configurar o transporter do Nodemailer
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.kinghost.net",
-    port: parseInt(process.env.SMTP_PORT || "465"),
-    secure: true, // true para 465 (SSL), false para 587 (TLS)
+    port: parseInt(process.env.SMTP_PORT || "587"),
+    secure: false, // false para 587 (TLS)
     auth: {
       user: process.env.SMTP_USER || "comunicacao@edesoft.com.br",
       pass: process.env.SMTP_PASS || "Eds@23!EU#30",
-    },
-    tls: {
-      rejectUnauthorized: false // Aceita certificados auto-assinados
     }
   });
 
