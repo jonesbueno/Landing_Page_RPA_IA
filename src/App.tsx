@@ -2,6 +2,14 @@ import './index.css'
 import { useState, useEffect } from 'react'
 import { FaRocket, FaBolt, FaShieldAlt, FaCogs, FaChartLine, FaUsers, FaRobot, FaLink, FaHeadset, FaWarehouse, FaFileInvoice, FaHandHoldingUsd, FaAward, FaGlobe, FaHandshake, FaWhatsapp } from 'react-icons/fa'
 
+// Declarações de tipos para tracking
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+    fbq: (...args: any[]) => void;
+  }
+}
+
 type SectionProps = {
   id?: string
 }
@@ -574,6 +582,23 @@ const Contact = () => {
 
   const handleSubmit = () => {
     setIsSubmitting(true)
+    
+    // Google Analytics - Lead Generation
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'conversion', {
+        'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL',
+        'value': 1.0,
+        'currency': 'BRL'
+      });
+    }
+    
+    // Meta Pixel - Lead Event
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead', {
+        content_name: 'Landing Page RPA + IA',
+        content_category: 'Lead Generation'
+      });
+    }
   }
 
   return (
@@ -591,17 +616,26 @@ const Contact = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto px-4 md:px-0"
         >
           {/* Campos ocultos do FormSubmit */}
-          <input type="hidden" name="_cc" value="marketing.edesoft@gmail.com" />
+          <input type="hidden" name="_cc" value="manoeledesio@edesoft.com.br,manoeledesio@grupoedesoft.com.br,flavia@bytecomunicacao.com.br" />
           <input type="hidden" name="_subject" value="Novo Lead - Landing Page RPA + IA" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="_autoresponse" value="Olá! Muito obrigado pelo seu interesse em conhecer nossas soluções de RPA e Inteligência Artificial. Recebemos suas informações e um especialista do nosso time entrará em contato em breve. Atenciosamente, Equipe Edesoft" />
           
           <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Nome Completo</label>
+            <label className="block text-sm text-white/80 mb-2 text-left">Nome</label>
             <input 
               type="text" 
               name="name" 
+              required 
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+            />
+          </div>
+          <div className="md:col-span-1">
+            <label className="block text-sm text-white/80 mb-2 text-left">Sobrenome</label>
+            <input 
+              type="text" 
+              name="surname" 
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
@@ -643,12 +677,24 @@ const Contact = () => {
               type="tel" 
               name="phone" 
               required 
+              pattern="[0-9]{2}[0-9]{4,5}[0-9]{4}"
+              maxLength={11}
+              placeholder="11987654321"
+              onKeyPress={(e) => {
+                if (!/[0-9]/.test(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+              onInput={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '');
+              }}
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
+            <p className="text-xs text-white/60 mt-1">Digite apenas números (ex: 11987654321)</p>
           </div>
           
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Qual seu maior desafio operacional hoje?</label>
+          <div className="md:col-span-2">
+            <label className="block text-sm text-white/80 mb-2 text-center">Qual seu maior desafio operacional hoje?</label>
             <textarea 
               name="message" 
               required 
@@ -705,6 +751,24 @@ export default function App({}: SectionProps) {
         }
         target="_blank"
         rel="noreferrer"
+        onClick={() => {
+          // Google Analytics - WhatsApp Click
+          if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag('event', 'whatsapp_click', {
+              'event_category': 'Contact',
+              'event_action': 'WhatsApp Click',
+              'event_label': 'Landing Page'
+            });
+          }
+          
+          // Meta Pixel - WhatsApp Click
+          if (typeof window !== 'undefined' && window.fbq) {
+            window.fbq('track', 'Contact', {
+              content_name: 'WhatsApp Click',
+              content_category: 'Contact'
+            });
+          }
+        }}
         className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-lg hover-elevate"
         style={{
           backgroundImage: 'linear-gradient(135deg,#25D366,#128C7E)'
