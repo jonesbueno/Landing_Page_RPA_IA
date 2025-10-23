@@ -18,10 +18,22 @@ module.exports = async (req, res) => {
 
   const { name, company, position, email, phone, message } = req.body;
 
+  console.log('Dados recebidos:', { name, company, position, email, phone, message: message?.substring(0, 50) });
+  
   // Validação básica
   if (!name || !email || !message) {
+    console.error('Validação falhou - campos faltando');
     return res.status(400).json({ error: 'Campos obrigatórios faltando' });
   }
+  
+  // Verificar variáveis de ambiente
+  console.log('Variáveis de ambiente:', {
+    SMTP_HOST: process.env.SMTP_HOST ? 'definida' : 'FALTANDO',
+    SMTP_PORT: process.env.SMTP_PORT ? 'definida' : 'FALTANDO',
+    SMTP_USER: process.env.SMTP_USER ? 'definida' : 'FALTANDO',
+    SMTP_PASS: process.env.SMTP_PASS ? 'definida' : 'FALTANDO',
+    EMAIL_TO: process.env.EMAIL_TO ? 'definida' : 'FALTANDO'
+  });
 
   // Configurar o transporter do Nodemailer
   const transporter = nodemailer.createTransport({
