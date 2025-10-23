@@ -599,14 +599,26 @@ const Contact = () => {
         body: JSON.stringify(data),
       })
 
-      const result = await response.json()
+      console.log('Response status:', response.status)
+      console.log('Response headers:', response.headers)
+      
+      const contentType = response.headers.get('content-type')
+      let result
+      
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json()
+      } else {
+        const text = await response.text()
+        console.error('Resposta não é JSON:', text)
+        result = { error: text }
+      }
 
       if (response.ok && result.success) {
         setSubmitStatus('success')
         form.reset()
       } else {
         setSubmitStatus('error')
-        console.error('Erro:', result)
+        console.error('Erro completo:', result)
       }
     } catch (error) {
       console.error('Erro ao enviar:', error)
