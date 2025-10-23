@@ -35,6 +35,13 @@ module.exports = async (req, res) => {
   });
 
   try {
+    console.log('Tentando enviar email...');
+    console.log('Configuração SMTP:', {
+      host: process.env.SMTP_HOST || "smtp.kinghost.net",
+      port: parseInt(process.env.SMTP_PORT || "587"),
+      user: process.env.SMTP_USER || "comunicacao@edesoft.com.br"
+    });
+    
     // Email para a equipe Edesoft
     await transporter.sendMail({
       from: `"Landing Page Edesoft" <${process.env.SMTP_USER || "comunicacao@edesoft.com.br"}>`,
@@ -109,13 +116,16 @@ module.exports = async (req, res) => {
       `,
     });
 
+    console.log('Emails enviados com sucesso!');
     return res.status(200).json({ success: true, message: 'Emails enviados com sucesso!' });
   } catch (error) {
     console.error('Erro ao enviar email:', error);
+    console.error('Stack:', error.stack);
     return res.status(500).json({ 
       success: false, 
       error: 'Erro ao enviar email',
-      details: error.message 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
