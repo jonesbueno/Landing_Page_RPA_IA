@@ -578,37 +578,38 @@ const Contact = () => {
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
-    // Salvar referência ao formulário antes da operação assíncrona
     const form = e.currentTarget
     const formData = new FormData(form)
     
-    // Converter FormData para objeto JSON
-    const formDataObj: Record<string, string> = {}
-    formData.forEach((value, key) => {
-      formDataObj[key] = value.toString()
-    })
+    const data = {
+      name: formData.get('name') as string,
+      company: formData.get('company') as string,
+      position: formData.get('position') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+      message: formData.get('message') as string,
+    }
 
     try {
-      const response = await fetch('https://api.web3forms.com/submit', {
+      const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
         },
-        body: JSON.stringify(formDataObj),
+        body: JSON.stringify(data),
       })
 
-      const data = await response.json()
+      const result = await response.json()
 
-      if (data.success) {
+      if (response.ok && result.success) {
         setSubmitStatus('success')
         form.reset()
       } else {
         setSubmitStatus('error')
-        console.error('Erro do Web3Forms:', data)
+        console.error('Erro:', result)
       }
     } catch (error) {
-      console.error('Erro ao enviar formulário:', error)
+      console.error('Erro ao enviar:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -623,17 +624,10 @@ const Contact = () => {
           title="Pronto Para Automatizar Sua Operação?"
           subtitle="Agende uma conversa sem compromisso e descubra como podemos reduzir seus custos"
         />
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto px-4 md:px-0">
-          {/* Campos obrigatórios do Web3Forms */}
-          <input type="hidden" name="access_key" value="24d4a369-8386-471f-8132-be5cc6b877b2" />
-          <input type="hidden" name="subject" value="Novo Lead - Landing Page RPA + IA" />
-          <input type="hidden" name="from_name" value="Landing Page Edesoft" />
-          
-          {/* Proteção anti-spam */}
-          <input type="checkbox" name="botcheck" className="hidden" />
-          
-          {/* Configuração de autoresponder */}
-          <input type="hidden" name="autoresponse" value="Obrigado pelo seu interesse!" />
+        <form 
+          onSubmit={handleSubmit} 
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto px-4 md:px-0"
+        >
           
           <div className="md:col-span-1">
             <label className="block text-sm text-white/80 mb-2 text-left">Nome Completo</label>
@@ -698,7 +692,7 @@ const Contact = () => {
           {/* Mensagens de feedback */}
           {submitStatus === 'success' && (
             <div className="col-span-1 md:col-span-2 rounded-lg bg-green-500/20 border border-green-500/50 p-4 text-green-100 text-sm">
-              ✅ Mensagem enviada com sucesso! Em breve um especialista entrará em contato.
+              ✅ Mensagem enviada com sucesso! Verifique seu email e em breve um especialista entrará em contato.
             </div>
           )}
           
