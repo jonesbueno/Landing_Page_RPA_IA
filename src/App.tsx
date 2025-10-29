@@ -1,12 +1,17 @@
 import './index.css'
 import { useState, useEffect } from 'react'
 import { FaRocket, FaBolt, FaShieldAlt, FaCogs, FaChartLine, FaUsers, FaRobot, FaLink, FaHeadset, FaWarehouse, FaFileInvoice, FaHandHoldingUsd, FaAward, FaGlobe, FaHandshake, FaWhatsapp } from 'react-icons/fa'
+import Swal from 'sweetalert2'
 
 // Declarações de tipos para tracking
 declare global {
   interface Window {
     gtag: (...args: any[]) => void;
     fbq: (...args: any[]) => void;
+    grecaptcha: {
+      ready: (callback: () => void) => void;
+      execute: (siteKey: string, options: { action: string }) => Promise<string>;
+    };
   }
 }
 
@@ -579,8 +584,43 @@ const FAQ = () => (
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    surname: '',
+    company: '',
+    position: '',
+    email: '',
+    phone: '',
+    message: ''
+  })
 
-  const handleSubmit = () => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handlePhoneKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
+      e.preventDefault()
+    }
+  }
+
+  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '')
+    if (value.length <= 11) {
+      setFormData(prev => ({
+        ...prev,
+        phone: value
+      }))
+    }
+  }
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setIsSubmitting(true)
     
     // Google Analytics - Lead Generation
@@ -591,12 +631,106 @@ const Contact = () => {
         'currency': 'BRL'
       });
     }
-    
+
     // Meta Pixel - Lead Event
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Lead', {
         content_name: 'Landing Page RPA + IA',
         content_category: 'Lead Generation'
+      });
+    }
+
+    try {
+      // Gerar token do reCAPTCHA v3 (opcional)
+      let gRecaptchaToken = ''
+      console.log('🔄 Tentando gerar token reCAPTCHA...')
+      
+      if (typeof window !== 'undefined' && window.grecaptcha) {
+        try {
+          console.log('⏳ Aguardando reCAPTCHA ficar pronto...')
+          await new Promise<void>((resolve) => {
+            window.grecaptcha.ready(() => {
+              console.log('✅ reCAPTCHA pronto!')
+              resolve()
+            })
+          })
+          
+          console.log('🔄 Executando reCAPTCHA...')
+          gRecaptchaToken = await window.grecaptcha.execute('6Ld7Z7wjAAAAABMHJ5yyh8TQufkpcg2LtyLwYucW', {
+            action: 'submit'
+          })
+          console.log('✅ Token reCAPTCHA gerado:', gRecaptchaToken.substring(0, 20) + '...')
+        } catch (recaptchaError) {
+          console.warn('⚠️ reCAPTCHA falhou, continuando sem token:', recaptchaError.message)
+          // Continua sem token do reCAPTCHA
+        }
+      } else {
+        console.log('ℹ️ reCAPTCHA não disponível, enviando sem token')
+      }
+
+      console.log('🔄 Enviando dados para API...')
+      const requestData = {
+        nome: formData.name,
+        sobrenome: formData.surname,
+        email: formData.email,
+        telefone: formData.phone,
+        mensagem: formData.message,
+        empresa: formData.company,
+        cargo: formData.position,
+        campanha: 'RPA',
+        gRecaptchaToken: gRecaptchaToken || 'disabled'
+      }
+      console.log('📤 Dados enviados:', requestData)
+
+      const response = await fetch("https://edesoft.com.br/api/sendLeadCampaign", {
+        method: "POST",
+        mode: 'cors',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      })
+
+      console.log('📥 Resposta recebida:', response.status, response.statusText)
+      
+      setIsSubmitting(false)
+      
+      if (response.ok) {
+        const responseData = await response.json()
+        console.log('✅ Resposta de sucesso:', responseData)
+        Swal.fire({
+          title: "Tudo certo",
+          text: "Sua mensagem foi enviada com sucesso.",
+          icon: "success",
+        })
+        
+        // Limpar formulário
+        setFormData({
+          name: '',
+          surname: '',
+          company: '',
+          position: '',
+          email: '',
+          phone: '',
+          message: ''
+        })
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('❌ Erro na API:', response.status, response.statusText, errorData)
+        Swal.fire({
+          title: "Oops...",
+          text: "Verifique seus dados e tente novamente mais tarde.",
+          icon: "error",
+        });
+      }
+    } catch (error) {
+      console.error('❌ Erro na requisição:', error)
+      setIsSubmitting(false)
+      Swal.fire({
+        title: "Oops...",
+        text: "Verifique seus dados e tente novamente mais tarde.",
+        icon: "error",
       });
     }
   }
@@ -610,23 +744,16 @@ const Contact = () => {
           subtitle="Agende uma conversa sem compromisso e descubra como podemos reduzir seus custos"
         />
         <form 
-          action="https://formsubmit.co/joao.espindola@edesoft.com.br"
-          method="POST"
           onSubmit={handleSubmit} 
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto px-4 md:px-0"
         >
-          {/* Campos ocultos do FormSubmit */}
-          <input type="hidden" name="_cc" value="manoeledesio@edesoft.com.br,manoeledesio@grupoedesoft.com.br,flavia@bytecomunicacao.com.br" />
-          <input type="hidden" name="_subject" value="Novo Lead - Landing Page RPA + IA" />
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="_autoresponse" value="Olá! Muito obrigado pelo seu interesse em conhecer nossas soluções de RPA e Inteligência Artificial. Recebemos suas informações e um especialista do nosso time entrará em contato em breve. Atenciosamente, Equipe Edesoft" />
-          
           <div className="md:col-span-1">
             <label className="block text-sm text-white/80 mb-2 text-left">Nome</label>
             <input 
               type="text" 
               name="name" 
+              value={formData.name}
+              onChange={handleInputChange}
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
@@ -636,6 +763,8 @@ const Contact = () => {
             <input 
               type="text" 
               name="surname" 
+              value={formData.surname}
+              onChange={handleInputChange}
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
@@ -646,6 +775,8 @@ const Contact = () => {
             <input 
               type="text" 
               name="company" 
+              value={formData.company}
+              onChange={handleInputChange}
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
@@ -656,6 +787,8 @@ const Contact = () => {
             <input 
               type="text" 
               name="position" 
+              value={formData.position}
+              onChange={handleInputChange}
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
@@ -666,6 +799,8 @@ const Contact = () => {
             <input 
               type="email" 
               name="email" 
+              value={formData.email}
+              onChange={handleInputChange}
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
@@ -676,27 +811,25 @@ const Contact = () => {
             <input 
               type="tel" 
               name="phone" 
+              value={formData.phone}
+              onChange={handleInputChange}
+              onKeyPress={handlePhoneKeyPress}
+              onInput={handlePhoneInput}
               required 
               pattern="[0-9]{2}[0-9]{4,5}[0-9]{4}"
               maxLength={11}
               placeholder="11987654321"
-              onKeyPress={(e) => {
-                if (!/[0-9]/.test(e.key)) {
-                  e.preventDefault();
-                }
-              }}
-              onInput={(e) => {
-                e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '');
-              }}
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
             />
             <p className="text-xs text-white/60 mt-1">Digite apenas números (ex: 11987654321)</p>
           </div>
           
           <div className="md:col-span-2">
-            <label className="block text-sm text-white/80 mb-2 text-center">Qual seu maior desafio operacional hoje?</label>
+            <label className="block text-sm text-white/80 mb-2 text-left">Qual seu maior desafio operacional hoje?</label>
             <textarea 
               name="message" 
+              value={formData.message}
+              onChange={handleInputChange}
               required 
               className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent] resize-none" 
               rows={4} 
@@ -709,7 +842,7 @@ const Contact = () => {
               disabled={isSubmitting}
               className={`w-full sm:w-auto inline-block rounded-lg btn-gradient hover-glow text-white px-6 py-3 text-sm font-semibold shadow-md shadow-black/20 hover-elevate ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Quero uma Consultoria Gratuita
+              {isSubmitting ? 'Enviando...' : 'Quero uma Consultoria Gratuita'}
             </button>
           </div>
         </form>
@@ -769,7 +902,7 @@ export default function App({}: SectionProps) {
             });
           }
         }}
-        className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-lg hover-elevate"
+        className="hidden fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-lg hover-elevate"
         style={{
           backgroundImage: 'linear-gradient(135deg,#25D366,#128C7E)'
         }}
