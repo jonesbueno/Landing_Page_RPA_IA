@@ -8,10 +8,6 @@ declare global {
   interface Window {
     gtag: (...args: any[]) => void;
     fbq: (...args: any[]) => void;
-    grecaptcha: {
-      ready: (callback: () => void) => void;
-      execute: (siteKey: string, options: { action: string }) => Promise<string>;
-    };
   }
 }
 
@@ -641,33 +637,6 @@ const Contact = () => {
     }
 
     try {
-      // Gerar token do reCAPTCHA v3 (opcional)
-      let gRecaptchaToken = ''
-      console.log('🔄 Tentando gerar token reCAPTCHA...')
-      
-      if (typeof window !== 'undefined' && window.grecaptcha) {
-        try {
-          console.log('⏳ Aguardando reCAPTCHA ficar pronto...')
-          await new Promise<void>((resolve) => {
-            window.grecaptcha.ready(() => {
-              console.log('✅ reCAPTCHA pronto!')
-              resolve()
-            })
-          })
-          
-          console.log('🔄 Executando reCAPTCHA...')
-          gRecaptchaToken = await window.grecaptcha.execute('6Ld7Z7wjAAAAABMHJ5yyh8TQufkpcg2LtyLwYucW', {
-            action: 'submit'
-          })
-          console.log('✅ Token reCAPTCHA gerado:', gRecaptchaToken.substring(0, 20) + '...')
-        } catch (recaptchaError) {
-          console.warn('⚠️ reCAPTCHA falhou, continuando sem token:', recaptchaError.message)
-          // Continua sem token do reCAPTCHA
-        }
-      } else {
-        console.log('ℹ️ reCAPTCHA não disponível, enviando sem token')
-      }
-
       console.log('🔄 Enviando dados para API...')
       const requestData = {
         nome: formData.name,
@@ -677,8 +646,7 @@ const Contact = () => {
         mensagem: formData.message,
         empresa: formData.company,
         cargo: formData.position,
-        campanha: 'RPA',
-        gRecaptchaToken: gRecaptchaToken || 'disabled'
+        campanha: 'RPA'
       }
       console.log('📤 Dados enviados:', requestData)
 
