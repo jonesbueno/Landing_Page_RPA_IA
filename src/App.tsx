@@ -1,24 +1,58 @@
 import './index.css'
 import { useState, useEffect } from 'react'
-import { FaRocket, FaBolt, FaShieldAlt, FaCogs, FaChartLine, FaUsers, FaRobot, FaLink, FaHeadset, FaWarehouse, FaFileInvoice, FaHandHoldingUsd, FaAward, FaGlobe, FaHandshake, FaWhatsapp } from 'react-icons/fa'
+import { 
+  FaRobot, 
+  FaHeadset, 
+  FaChartLine, 
+  FaCogs, 
+  FaUsers, 
+  FaBrain, 
+  FaShoppingCart, 
+  FaIndustry, 
+  FaUserTie,
+  FaLightbulb,
+  FaClock,
+  FaMoneyBillWave,
+  FaThumbsUp,
+  FaRocket,
+  FaAward,
+  FaGlobe,
+  FaShieldAlt,
+  FaHandshake,
+  FaWhatsapp,
+  FaSearch,
+  FaPencilAlt,
+  FaCode,
+  FaVial,
+  FaPlay,
+  FaSyncAlt,
+  FaDatabase
+} from 'react-icons/fa'
 import Swal from 'sweetalert2'
 
-// Declarações de tipos para tracking
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
-    fbq: (...args: any[]) => void;
+    gtag: (...args: unknown[]) => void;
+    fbq: (...args: unknown[]) => void;
+    grecaptcha: {
+      enterprise: {
+        ready: (callback: () => void | Promise<void>) => void;
+        execute: (siteKey: string, options: { action: string }) => Promise<string>;
+      };
+    };
   }
 }
 
-type SectionProps = {
-  id?: string
-}
-
-const Button = ({ children, href, variant = 'primary' }: { children: React.ReactNode, href?: string, variant?: 'primary' | 'secondary' }) => {
+// Componentes reutilizáveis
+const Button = ({ children, href, variant = 'primary', className = '' }: { 
+  children: React.ReactNode, 
+  href?: string, 
+  variant?: 'primary' | 'secondary',
+  className?: string 
+}) => {
   const classes = variant === 'primary'
-    ? 'inline-block rounded-lg btn-gradient hover-glow text-white px-6 py-3 text-sm font-semibold shadow-md shadow-black/20 hover-elevate'
-    : 'inline-block rounded-lg bg-white/10 hover:bg-white/20 text-white px-6 py-3 text-sm font-semibold border border-white/20 hover-elevate'
+    ? `inline-block rounded-full btn-gradient hover-glow px-8 py-4 text-base font-bold shadow-lg hover-elevate ${className}`
+    : `inline-block rounded-full px-8 py-4 text-base font-semibold text-[#22d3ee] hover:text-[#7c3aed] border-2 border-[#22d3ee] hover:border-[#7c3aed] hover-elevate bg-[#0a0c14] ${className}`
   return href ? (
     <a href={href} className={classes}>{children}</a>
   ) : (
@@ -26,484 +60,667 @@ const Button = ({ children, href, variant = 'primary' }: { children: React.React
   )
 }
 
-const SectionTitle = ({ title, subtitle }: { title: string, subtitle?: string }) => (
-  <div className="max-w-3xl mx-auto text-center mb-10">
-    <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gradient">{title}</h2>
-    {subtitle && <p className="text-white/85 mt-3">{subtitle}</p>}
+const SectionTitle = ({ title, subtitle, highlight }: { title: string, subtitle?: string, highlight?: string }) => (
+  <div className="max-w-4xl mx-auto text-center mb-12">
+    <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
+      {title} {highlight && <span className="text-gradient">{highlight}</span>}
+    </h2>
+    {subtitle && <p className="text-slate-300 mt-4 text-lg max-w-2xl mx-auto">{subtitle}</p>}
       </div>
 )
 
-const LogoCarousel = () => {
-  const logos = [
-    { src: '/SVG/Albert.svg', alt: 'Albert Einstein', size: 'h-6 sm:h-8 md:h-10' },
-    { src: '/SVG/Bradesco.svg', alt: 'Bradesco', size: 'h-6 sm:h-8 md:h-10' },
-    { src: '/SVG/Carrefour.svg', alt: 'Carrefour', size: 'h-6 sm:h-8 md:h-10' },
-    { src: '/SVG/CNN.svg', alt: 'CNN', size: 'h-5 sm:h-6 md:h-8' },
-    { src: '/SVG/Embraer.svg', alt: 'Embraer', size: 'h-5 sm:h-6 md:h-8' },
-    { src: '/SVG/Friboi.svg', alt: 'Friboi', size: 'h-5 sm:h-6 md:h-8' },
-    { src: '/SVG/Itau_1.svg', alt: 'Itaú', size: 'h-6 sm:h-8 md:h-10' },
-    { src: '/SVG/Magalu.svg', alt: 'Magalu', size: 'h-5 sm:h-6 md:h-8' },
-    { src: '/SVG/Sequoia.svg', alt: 'Sequoia', size: 'h-5 sm:h-6 md:h-8' },
-  ]
-
-  return (
-    <div className="relative overflow-hidden mt-4 sm:mt-6 md:mt-8">
-      {/* Gradiente nas bordas para efeito fade */}
-      <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 md:w-16 bg-gradient-to-r from-[--bg] to-transparent z-10"></div>
-      <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 md:w-16 bg-gradient-to-l from-[--bg] to-transparent z-10"></div>
-      
-      <div className="flex animate-scroll">
-        {/* Primeira linha de logos */}
-        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-12 flex-shrink-0">
-          {logos.map((logo, index) => (
-            <div key={`first-${index}`} className="flex items-center justify-center h-8 sm:h-10 md:h-12 w-20 sm:w-24 md:w-32">
-              <img 
-                src={logo.src} 
-                alt={logo.alt}
-                className={`${logo.size} w-auto opacity-40 hover:opacity-70 transition-all duration-300 filter grayscale hover:grayscale-0`}
-              />
-            </div>
-          ))}
-        </div>
-        {/* Segunda linha de logos (duplicada para efeito infinito) */}
-        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-12 flex-shrink-0">
-          {logos.map((logo, index) => (
-            <div key={`second-${index}`} className="flex items-center justify-center h-8 sm:h-10 md:h-12 w-20 sm:w-24 md:w-32">
-              <img 
-                src={logo.src} 
-                alt={logo.alt}
-                className={`${logo.size} w-auto opacity-40 hover:opacity-70 transition-all duration-300 filter grayscale hover:grayscale-0`}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
+// ============================================
+// HERO SECTION
+// ============================================
 const Hero = () => (
-  <header className="relative overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-deep" />
-    <div className="container-page relative pt-20 pb-16 md:pt-28 md:pb-24">
-      <div className="max-w-4xl lg:max-w-5xl mx-auto text-center min-h-[60vh] flex flex-col items-center justify-center">
-        <span className="badge mx-auto">
-          <span className="h-2 w-2 rounded-full bg-[--accent]" /> RPA + IA para sua operação
+  <header className="relative overflow-hidden min-h-screen flex items-center bg-[#0a0c14] text-white">
+    {/* Brushes decorativos */}
+    <div className="brush-top-right" />
+    <div className="brush-bottom-left" />
+    
+    <div className="container-page relative py-20">
+      <div className="max-w-5xl mx-auto text-center">
+        <span className="badge mb-6 inline-flex">
+          <span className="h-2 w-2 rounded-full bg-[#22d3ee] animate-pulse" /> 
+          Agentes de IA Autônomos
         </span>
-        <h1 className="mt-5 text-3xl sm:text-4xl md:text-6xl font-extrabold leading-[1.1] text-white">
-          <span className="block lg:hidden">Sua Empresa</span>
-          <span className="block lg:hidden">Perde Dinheiro com</span>
-          <span className="block lg:hidden"><span className="text-gradient">Processos Manuais</span>?</span>
-          <span className="hidden lg:block">Sua Empresa Perde Dinheiro</span>
-          <span className="hidden lg:block">com <span className="text-gradient">Processos Manuais</span>?</span>
+        
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-[1.1] text-white">
+          E Se Sua Empresa Tivesse{' '}
+          <span className="text-gradient">Colaboradores Digitais</span>{' '}
+          Trabalhando 24/7?
         </h1>
-        <p className="mt-4 md:mt-6 text-lg md:text-xl text-white/85 max-w-2xl mx-auto">
-          Automatize tarefas repetitivas e transforme sua operação com RPA + Inteligência Artificial
+        
+        <p className="mt-6 md:mt-8 text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          Agentes de IA autônomos que atendem clientes, analisam dados e executam 
+          tarefas complexas com <span className="text-gradient font-semibold">precisão absoluta</span>.
         </p>
-        <div className="mt-6 md:mt-8 flex flex-wrap gap-4 justify-center">
-          <Button href="#contato">Quero Reduzir Custos Agora</Button>
-          <Button href="#problemas" variant="secondary">Como funciona?</Button>
+        
+        <div className="mt-10 flex flex-wrap gap-4 justify-center">
+          <Button href="#contato">Quero Conhecer os Agentes de IA</Button>
+          <Button href="#agentes" variant="secondary">Como Funciona?</Button>
         </div>
-      </div>
-      
-      {/* Seção de logos integrada */}
-      <div className="mt-12 sm:mt-16 md:mt-20">
-        <div className="text-center mb-4 sm:mb-6">
-          <p className="text-xs sm:text-sm md:text-base text-white/70 font-medium px-4">
-            Automatizamos processos e entregamos resultados reais para grandes players do mercado como
-          </p>
-        </div>
-        <LogoCarousel />
       </div>
     </div>
   </header>
 )
 
-
-const Problems = () => (
-  <section id="problemas" className="container-page py-14 md:py-20">
-    <SectionTitle title="Reconhece algum desses problemas?" />
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[
-        { title: 'Processos Lentos', desc: 'Sua equipe perde horas em tarefas manuais e repetitivas que poderiam ser automatizadas', icon: <FaBolt className="text-accent" /> },
-        { title: 'Custos Elevados', desc: 'Operações manuais custam caro e impedem seu time de focar no que realmente importa', icon: <FaHandHoldingUsd className="text-accent" /> },
-        { title: 'Erros Frequentes', desc: 'Retrabalho e falhas humanas prejudicam a qualidade e aumentam os custos operacionais', icon: <FaShieldAlt className="text-accent" /> },
-        { title: 'Falta de Escalabilidade', desc: 'Crescer significa contratar mais pessoas, aumentando custos sem ganhar eficiência', icon: <FaChartLine className="text-accent" /> },
-        { title: 'Equipe Sobrecarregada', desc: 'Colaboradores gastam tempo com tarefas repetitivas em vez de gerar valor estratégico', icon: <FaUsers className="text-accent" /> },
-        { title: 'Sistemas Desconectados', desc: 'Informações fragmentadas em diferentes plataformas sem comunicação entre si', icon: <FaLink className="text-accent" /> },
-      ].map((c) => (
-        <div key={c.title} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm shadow-card hover-elevate">
-          <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center mb-3">
-            {c.icon}
-          </div>
-          <h3 className="text-xl font-bold text-white">{c.title}</h3>
-          <p className="text-white/80 mt-2">{c.desc}</p>
-        </div>
-      ))}
-    </div>
-    <div className="mt-8 text-center">
-      <Button href="#contato">Quero uma Solução Personalizada</Button>
-    </div>
-  </section>
-)
-
-const Solution = () => (
-  <section id="solucao" className="relative overflow-hidden">
-    <div className="absolute inset-0 bg-section-gradient/50" />
-    
-    {/* Imagem de fundo do processo com perspectiva */}
-    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2/3 h-full opacity-10 pointer-events-none">
-      <img 
-        src="/rpa_process.png" 
-        alt="Fluxo de processo RPA" 
-        className="w-full h-full object-contain"
-        style={{ 
-          transform: 'rotate(-8deg) scale(1.2)',
-          filter: 'blur(1px)'
-        }}
-      />
-    </div>
-    
-    <div className="container-page relative py-14 md:py-20">
-      <SectionTitle
-        title="A solução que sua empresa precisa"
-        subtitle="Combinamos RPA e Inteligência Artificial para eliminar gargalos e transformar sua operação"
-      />
-      <div className="grid md:grid-cols-3 gap-6">
-        {[
-          { title: 'RPA - Automação Robótica', desc: 'Robôs que executam tarefas repetitivas 24/7, sem erros e sem pausas. Libere seu time para atividades estratégicas.', icon: <FaRobot className="text-white" /> },
-          { title: 'Agentes de IA Personalizados', desc: 'Assistentes inteligentes sob medida. Atendem clientes, analisam dados e tomam decisões com precisão.', icon: <FaCogs className="text-white" /> },
-          { title: 'Integração Total', desc: 'Conectamos todas as suas ferramentas e sistemas, criando uma operação fluida e inteligente.', icon: <FaLink className="text-white" /> },
-        ].map((c) => (
-          <div key={c.title} className="rounded-2xl border-gradient bg-white/5 p-6 hover-elevate">
-            <div className="h-12 w-12 rounded-xl bg-gradient-primary flex items-center justify-center mb-3 text-white">
-              {c.icon}
-            </div>
-            <h3 className="text-xl font-bold text-white">{c.title}</h3>
-            <p className="text-white/80 mt-2">{c.desc}</p>
-          </div>
-        ))}
-      </div>
-      <div className="mt-8 text-center">
-        <Button href="#como-funciona">Transformar Minha Operação</Button>
-      </div>
-    </div>
-  </section>
-)
-
-const Pillars = () => (
-  <section id="pilares" className="container-page py-14 md:py-20">
-    <SectionTitle title="Pilares da nossa solução" />
-    <div className="grid md:grid-cols-2 gap-6">
-      {[
-        { title: 'Automação Inteligente de Processos', icon: <FaRocket />, color: 'from-[#a78bfa] to-[#60a5fa]', desc: 'Nossa solução identifica os melhores processos para automação e implementa robôs que aprendem e se adaptam ao seu negócio. Imagine um assistente digital 24/7 processando pedidos, atualizando sistemas, gerando relatórios e respondendo solicitações sem erros.' },
-        { title: 'Decisões Baseadas em Dados Reais', icon: <FaChartLine />, color: 'from-[#60a5fa] to-[#22d3ee]', desc: 'Agentes de IA analisam grandes volumes de informação em segundos, identificam padrões e entregam insights que transformam sua estratégia. Descubra oportunidades, preveja problemas e decida com base em fatos.' },
-        { title: 'Experiência do Cliente Elevada', icon: <FaHeadset />, color: 'from-[#22d3ee] to-[#5eead4]', desc: 'Clientes esperam respostas instantâneas e personalizadas. Ofereça atendimento 24/7, resolva dúvidas em segundos e personalize cada interação, aumentando satisfação e reduzindo chamados.' },
-        { title: 'Redução Real de Custos', icon: <FaHandHoldingUsd />, color: 'from-[#5a44e9] to-[#2a8dff]', desc: 'Elimine desperdícios, reduza erros e cresça sem aumentar proporcionalmente o quadro. Reduções de custos operacionais em até 30% nos primeiros meses.' },
-      ].map((p) => (
-        <div key={p.title} className="rounded-2xl p-1 hover-elevate">
-          <div className={`rounded-2xl p-[1px] bg-gradient-to-r ${p.color}`}>
-            <div className="rounded-2xl bg-[#0b1020]/80 p-6 border border-white/10">
-              <div className="h-12 w-12 rounded-xl bg-gradient-primary text-white flex items-center justify-center mb-3">
-                {p.icon}
-              </div>
-              <h3 className="text-xl font-bold text-white">{p.title}</h3>
-              <p className="text-white/80 mt-2">{p.desc}</p>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-)
-
-const UseCases = () => {
-  const cases = [
-    {
-      key: 'financeiro' as const,
-      title: 'Financeiro e Contabilidade',
-      icon: <FaFileInvoice />,
-      color: 'from-[#a78bfa] to-[#60a5fa]',
-      items: [
-        'Extração automática de dados de notas fiscais e documentos',
-        'Conciliação bancária com alertas inteligentes',
-        'Relatórios financeiros em minutos',
-        'Previsão de fluxo de caixa com IA',
-      ],
-      result: '70% menos tempo de fechamento e 95% menos erros.',
+// ============================================
+// SEÇÃO: VOCÊ ESTÁ PERDENDO OPORTUNIDADES?
+// ============================================
+const Problems = () => {
+  const problems = [
+    { 
+      title: 'Atendimento Limitado', 
+      desc: 'Seus clientes precisam de respostas rápidas, mas sua equipe não consegue atender todos ao mesmo tempo',
+      icon: <FaHeadset className="text-2xl" />
     },
-    {
-      key: 'atendimento' as const,
-      title: 'Atendimento ao Cliente',
-      icon: <FaHeadset />,
-      color: 'from-[#60a5fa] to-[#22d3ee]',
-      items: [
-        'Chatbot que resolve 80% das dúvidas',
-        'Consulta a múltiplos sistemas com IA',
-        'Atendimento personalizado por histórico',
-        'Escalação inteligente para humanos',
-      ],
-      result: '60% menos chamados e +40% em satisfação.',
+    { 
+      title: 'Perda de Vendas', 
+      desc: 'Leads entram em contato fora do horário comercial e você perde negócios para concorrentes mais ágeis',
+      icon: <FaShoppingCart className="text-2xl" />
     },
-    {
-      key: 'rh' as const,
-      title: 'Recursos Humanos',
-      icon: <FaUsers />,
-      color: 'from-[#22d3ee] to-[#5eead4]',
-      items: [
-        'Triagem com análise de fit',
-        'Agendamento automático de entrevistas',
-        'Onboarding digital guiado',
-        'Automação de férias e benefícios',
-      ],
-      result: '50% menos tempo de contratação e 80% menos trabalho manual.',
+    { 
+      title: 'Análise Demorada', 
+      desc: 'Seu time gasta dias analisando dados que um agente de IA processaria em minutos',
+      icon: <FaChartLine className="text-2xl" />
     },
-    {
-      key: 'operacoes' as const,
-      title: 'Operações e Logística',
-      icon: <FaWarehouse />,
-      color: 'from-[#5a44e9] to-[#2a8dff]',
-      items: [
-        'Estoque com previsão de demanda',
-        'Pedidos automatizados multi-canais',
-        'Rotas otimizadas por IA',
-        'Alertas proativos de atrasos',
-      ],
-      result: '35% menos custos e 90% de precisão de estoque.',
+    { 
+      title: 'Processos Complexos Travados', 
+      desc: 'Tarefas que exigem consultas em múltiplos sistemas consomem horas da sua equipe',
+      icon: <FaCogs className="text-2xl" />
+    },
+    { 
+      title: 'Conhecimento Fragmentado', 
+      desc: 'Informações críticas dispersas em documentos, e-mails e sistemas diferentes',
+      icon: <FaDatabase className="text-2xl" />
+    },
+    { 
+      title: 'Escalabilidade Cara', 
+      desc: 'Crescer significa contratar mais pessoas, aumentando custos sem garantir eficiência',
+      icon: <FaMoneyBillWave className="text-2xl" />
     },
   ]
 
-  type CaseKey = typeof cases[number]['key']
-  const [active, setActive] = useState<CaseKey>('financeiro')
-  const activeCase = cases.find(c => c.key === active)!
+  return (
+    <section id="problemas" className="container-page py-20">
+      <SectionTitle 
+        title="Você Está Perdendo" 
+        highlight="Oportunidades?"
+      />
+      
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {problems.map((p, idx) => (
+          <div 
+            key={p.title} 
+            className="fade-in-up hover-elevate rounded-2xl p-7 text-white shadow-lg" 
+            style={{ 
+              animationDelay: `${idx * 0.1}s`,
+              background: 'linear-gradient(160deg, rgba(34,211,238,0.22), rgba(124,58,237,0.28), rgba(12,18,32,0.95))',
+              border: '1px solid rgba(255,255,255,0.08)'
+            }}
+          >
+            <div className="h-12 w-12 rounded-xl  bg-[#0a0c14]/12 flex items-center justify-center mb-4 text-white">
+              {p.icon}
+          </div>
+            <h3 className="text-xl font-bold mb-2">{p.title}</h3>
+            <p className="text-slate-200/90">{p.desc}</p>
+        </div>
+      ))}
+    </div>
+      
+      <div className="mt-12 text-center">
+        <Button href="#agentes">Quero uma Solução Inteligente</Button>
+    </div>
+  </section>
+)
+}
+
+// ============================================
+// SEÇÃO: CLIENTES (Logos em Cards)
+// ============================================
+const Clients = () => {
+  const logos = [
+    { src: '/SVG/Albert.svg', alt: 'Albert Einstein' },
+    { src: '/SVG/Bradesco.svg', alt: 'Bradesco' },
+    { src: '/SVG/Carrefour.svg', alt: 'Carrefour' },
+    { src: '/SVG/CNN.svg', alt: 'CNN' },
+    { src: '/SVG/Embraer.svg', alt: 'Embraer' },
+    { src: '/SVG/Friboi.svg', alt: 'Friboi' },
+    { src: '/SVG/Itau_1.svg', alt: 'Itaú' },
+    { src: '/SVG/Magalu.svg', alt: 'Magalu' },
+  ]
 
   return (
-    <section id="casos" className="relative">
-      <div className="container-page py-14 md:py-20">
-        <SectionTitle title="Casos de uso reais" subtitle="Veja como RPA + IA transforma áreas-chave do seu negócio" />
-        <div className="flex flex-wrap gap-3 justify-center">
-          {cases.map(c => (
-            <button
-              key={c.key}
-              onClick={() => setActive(c.key)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition border ${active === c.key ? 'text-black bg-white border-white' : 'text-white/80 bg-white/10 border-white/10 hover:bg-white/15'}`}
-              aria-pressed={active === c.key}
-            >
-              {c.title}
-            </button>
+    <section className="py-20 bg-section-alt">
+      <div className="container-page">
+        <SectionTitle 
+          title="Quem já usa os"
+          highlight="Agentes de IA"
+          subtitle="Empresas que já transformaram seus negócios com nossa plataforma"
+        />
+        
+        {/* Grid de logos em 2 linhas como na imagem */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          {logos.map((logo) => (
+            <div key={logo.alt} className="logo-card">
+              <img 
+                src={logo.src} 
+                alt={logo.alt}
+                className="h-8 md:h-10 w-auto max-w-[120px] object-contain"
+      />
+    </div>
           ))}
-        </div>
-        <div className="mt-8 rounded-2xl p-[1px] bg-gradient-to-r from-[#5a44e9] to-[#2a8dff]">
-          <div className="rounded-2xl bg-[#0b1020]/85 border border-white/10 p-6">
-            <div className="flex items-start gap-4">
-              <div className="h-12 w-12 rounded-xl bg-gradient-primary text-white flex items-center justify-center">
-                {activeCase.icon}
-              </div>
-              <div>
-                <h3 className="text-2xl font-extrabold text-white">{activeCase.title}</h3>
-                <p className="text-white/80">{activeCase.result}</p>
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 gap-4 mt-4">
-              {activeCase.items.map(i => (
-                <div key={i} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[--accent]"></span>
-                    <span className="text-white/85">{i}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 text-center">
-              <Button href="#contato">Ver Meu Caso de Uso</Button>
-            </div>
-          </div>
         </div>
       </div>
     </section>
   )
 }
 
-const Stats = () => (
-  <section className="container-page py-14 md:py-20">
-    <div className="text-center mb-12">
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gradient">
-        Estes números podem ser os da sua empresa
-      </h2>
+// ============================================
+// SEÇÃO: CONHEÇA OS AGENTES DE IA
+// ============================================
+const AgentsIntro = () => {
+  const capabilities = [
+    'Entendem contexto e intenção, não apenas palavras-chave',
+    'Consultam múltiplos sistemas e bases de conhecimento automaticamente',
+    'Tomam decisões inteligentes baseadas em regras e aprendizado contínuo',
+    'Executam ações concretas: agendam reuniões, atualizam sistemas, geram relatórios',
+    'Trabalham 24 horas por dia, 7 dias por semana, sem pausas ou erros',
+  ]
+
+  const agentTypes = [
+    {
+      title: 'Agente de Atendimento ao Cliente',
+      desc: 'Resolve dúvidas, processa solicitações e escala casos complexos para humanos apenas quando necessário',
+      icon: <FaHeadset className="text-3xl" />,
+      color: 'from-primary to-accent'
+    },
+    {
+      title: 'Agente de Vendas e Qualificação',
+      desc: 'Qualifica leads, agenda reuniões, responde objeções e nutre prospects até o momento ideal de compra',
+      icon: <FaShoppingCart className="text-3xl" />,
+      color: 'from-accent to-primary'
+    },
+    {
+      title: 'Agente de Análise e Insights',
+      desc: 'Monitora dados em tempo real, identifica padrões e gera relatórios estratégicos automaticamente',
+      icon: <FaChartLine className="text-3xl" />,
+      color: 'from-primary to-accent'
+    },
+    {
+      title: 'Agente de Operações Internas',
+      desc: 'Processa solicitações de RH, TI, financeiro e outras áreas com respostas instantâneas e precisas',
+      icon: <FaCogs className="text-3xl" />,
+      color: 'from-accent to-primary'
+    },
+    {
+      title: 'Agente de Conhecimento Corporativo',
+      desc: 'Centraliza todo conhecimento da empresa e responde perguntas complexas consultando documentos, políticas e históricos',
+      icon: <FaBrain className="text-3xl" />,
+      color: 'from-primary to-accent'
+    },
+    {
+      title: 'Agente de WhatsApp e Multicanal',
+      desc: 'Automatiza conversas no WhatsApp, responde mensagens instantaneamente e gerencia templates de comunicação em escala',
+      icon: <FaWhatsapp className="text-3xl" />,
+      color: 'from-accent to-primary'
+    },
+  ]
+
+  return (
+    <section id="agentes" className="py-20 relative overflow-hidden">
+      <div className="container-page relative">
+      <SectionTitle
+          title="Conheça os Agentes de IA da"
+          highlight="Edesoft"
+        />
+        
+        {/* Introdução */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="card-premium p-8 md:p-10">
+            <p className="text-xl text-slate-200 text-center leading-relaxed">
+              <span className="text-primary font-semibold">Não são chatbots simples.</span> São agentes inteligentes 
+              personalizados que aprendem, raciocinam e agem de forma autônoma para resolver 
+              problemas reais do seu negócio.
+            </p>
+            </div>
+          </div>
+      
+        {/* O que são agentes */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8">
+            O Que São <span className="text-gradient">Agentes de IA Autônomos</span>?
+          </h3>
+          <p className="text-lg text-slate-300 text-center mb-8">
+            Imagine ter colaboradores digitais que:
+          </p>
+          
+          <div className="space-y-4">
+            {capabilities.map((cap, idx) => (
+              <div key={idx} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
+                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+      </div>
+                <span className="text-slate-200">{cap}</span>
+      </div>
+            ))}
     </div>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {[
-        ['30%', 'Redução de Custos'],
-        ['80%', 'Menos Tempo em Tarefas'],
-        ['24/7', 'Operação Automatizada'],
-        ['95%', 'Redução de Erros'],
-      ].map(([n, l]) => (
-        <div key={n} className="rounded-xl border border-white/10 bg-white/5 p-6 text-center hover-elevate">
-          <div className="text-3xl font-extrabold text-white">{n}</div>
-          <div className="text-white/80">{l}</div>
         </div>
-      ))}
-    </div>
-    <div className="mt-10 text-center">
-      <Button href="#contato">Quero Esses Resultados</Button>
+
+        {/* Tipos de agentes */}
+        <h3 className="text-2xl md:text-3xl font-bold text-center mb-8">
+          Tipos de <span className="text-gradient">Agentes</span> Que Desenvolvemos
+        </h3>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {agentTypes.map((agent, idx) => (
+            <div 
+              key={agent.title} 
+              className="card-premium p-6 hover-elevate"
+              style={{ animationDelay: `${idx * 0.1}s` }}
+            >
+              <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${agent.color} flex items-center justify-center mb-4 text-white`}>
+                {agent.icon}
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">{agent.title}</h4>
+              <p className="text-slate-300">{agent.desc}</p>
+            </div>
+          ))}
+          </div>
+        
+        <div className="mt-12 text-center">
+          <Button href="#contato">Quero um Agente Personalizado</Button>
+        </div>
     </div>
   </section>
 )
+}
 
-const Benefits = () => (
-  <section id="beneficios" className="relative">
-    <div className="absolute inset-0 bg-section-gradient/50" />
-    <div className="container-page relative py-14 md:py-20">
-      <SectionTitle title="O que você ganha" />
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          { t: 'Velocidade', d: 'Processos que levavam horas agora acontecem em minutos', icon: <FaBolt /> },
-          { t: 'Economia Real', d: 'Reduza custos operacionais em até 30% nos primeiros meses', icon: <FaHandHoldingUsd /> },
-          { t: 'Precisão', d: 'Elimine erros humanos e garanta qualidade consistente', icon: <FaShieldAlt /> },
-          { t: 'Escalabilidade', d: 'Cresça sem precisar aumentar proporcionalmente seu time', icon: <FaChartLine /> },
-          { t: 'Inovação Contínua', d: 'Libere recursos para investir em projetos estratégicos', icon: <FaRocket /> },
-          { t: 'Satisfação do Cliente', d: 'Atendimento mais rápido e personalizado', icon: <FaHeadset /> },
-        ].map((b) => (
-          <div key={b.t} className="rounded-2xl border-gradient bg-white/5 p-6 hover-elevate">
-            <div className="h-10 w-10 rounded-lg bg-gradient-primary text-white flex items-center justify-center mb-3">
+// ============================================
+// SEÇÃO: CASOS DE USO REAIS
+// ============================================
+const UseCases = () => {
+  const cases = [
+    {
+      id: 'ecommerce',
+      title: 'E-commerce: Agente de Vendas 24/7',
+      icon: <FaShoppingCart className="text-2xl" />,
+      challenge: 'Loja online perdia vendas porque clientes tinham dúvidas fora do horário comercial e abandonavam carrinhos.',
+      solutions: [
+        'Agente de IA que responde dúvidas sobre produtos em tempo real',
+        'Recomendações personalizadas baseadas no histórico de navegação',
+        'Processamento de trocas e devoluções automaticamente',
+        'Escalação inteligente para vendedores apenas em casos complexos',
+      ],
+      result: 'Aumento de 45% na conversão e redução de 70% no abandono de carrinho',
+    },
+    {
+      id: 'servicos',
+      title: 'Empresa de Serviços: Atendimento Multicanal',
+      icon: <FaHeadset className="text-2xl" />,
+      challenge: 'Volume crescente de chamados sobrecarregava equipe, gerando insatisfação e perda de clientes.',
+      solutions: [
+        'Agente que atende via chat, e-mail e WhatsApp simultaneamente',
+        'Acesso a base de conhecimento completa da empresa',
+        'Consulta automática a sistemas de pedidos, contratos e faturas',
+        'Criação de tickets para casos que exigem intervenção humana',
+      ],
+      result: '80% dos atendimentos resolvidos pelo agente, tempo de resposta reduzido de horas para segundos',
+    },
+    {
+      id: 'industria',
+      title: 'Indústria: Agente de Análise Preditiva',
+      icon: <FaIndustry className="text-2xl" />,
+      challenge: 'Gestores precisavam de insights rápidos sobre produção, mas relatórios demoravam dias para serem gerados.',
+      solutions: [
+        'Agente que monitora indicadores de produção em tempo real',
+        'Alertas proativos sobre desvios e potenciais problemas',
+        'Análise preditiva de manutenção de equipamentos',
+        'Geração automática de relatórios executivos personalizados',
+      ],
+      result: 'Redução de 35% em paradas não planejadas e tomada de decisão 10x mais rápida',
+    },
+    {
+      id: 'rh',
+      title: 'RH: Agente de Onboarding e Suporte',
+      icon: <FaUserTie className="text-2xl" />,
+      challenge: 'Novos colaboradores tinham dúvidas repetitivas e RH gastava tempo respondendo as mesmas perguntas.',
+      solutions: [
+        'Agente que orienta novos colaboradores durante todo onboarding',
+        'Respostas instantâneas sobre benefícios, políticas e procedimentos',
+        'Agendamento automático de treinamentos e reuniões',
+        'Portal único de conhecimento acessível por voz ou chat',
+      ],
+      result: '90% das dúvidas resolvidas sem envolver RH, onboarding 3x mais rápido',
+    },
+  ]
+
+  const [activeCase, setActiveCase] = useState(cases[0].id)
+  const currentCase = cases.find(c => c.id === activeCase)!
+
+  return (
+    <section id="casos" className="py-20 bg-section-alt">
+      <div className="container-page">
+        <SectionTitle 
+          title="Casos de Uso"
+          highlight="Reais"
+          subtitle="Veja como Agentes de IA estão transformando empresas de diferentes setores"
+        />
+        
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-3 justify-center mb-10">
+          {cases.map(c => (
+            <button
+              key={c.id}
+              onClick={() => setActiveCase(c.id)}
+              className={`px-5 py-3 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
+                activeCase === c.id 
+                  ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' 
+                  : 'bg-[#111727] text-slate-200 hover:bg-[#151d2f] border border-white/10'
+              }`}
+            >
+              {c.icon}
+              <span className="hidden sm:inline">{c.title.split(':')[0]}</span>
+            </button>
+          ))}
+        </div>
+        
+        {/* Case Content */}
+        <div className="max-w-4xl mx-auto">
+          <div className="card-premium p-8 md:p-10">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white">
+                {currentCase.icon}
+              </div>
+              <h3 className="text-2xl font-bold text-white">{currentCase.title}</h3>
+              </div>
+            
+            <div className="mb-6">
+              <h4 className="text-primary font-semibold mb-2">Desafio:</h4>
+              <p className="text-slate-300">{currentCase.challenge}</p>
+            </div>
+            
+            <div className="mb-6">
+              <h4 className="text-primary font-semibold mb-3">Solução:</h4>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {currentCase.solutions.map((sol, idx) => (
+                  <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                    <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="h-2 w-2 rounded-full bg-primary" />
+                  </div>
+                    <span className="text-slate-300 text-sm">{sol}</span>
+                </div>
+              ))}
+            </div>
+            </div>
+            
+            <div className="p-4 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
+              <h4 className="text-accent font-semibold mb-1">Resultado:</h4>
+              <p className="text-white font-medium">{currentCase.result}</p>
+    </div>
+        </div>
+    </div>
+        
+    <div className="mt-10 text-center">
+          <Button href="#contato">Ver Meu Caso de Uso</Button>
+        </div>
+    </div>
+  </section>
+)
+}
+
+// ============================================
+// SEÇÃO: O QUE VOCÊ GANHA
+// ============================================
+const Benefits = () => {
+  const benefits = [
+    { title: 'Atendimento Sem Limites', desc: 'Seus clientes recebem suporte imediato, qualquer hora, qualquer dia, em qualquer canal', icon: <FaClock /> },
+    { title: 'Redução de Custos', desc: 'Diminua até 60% nos custos de atendimento sem comprometer a qualidade', icon: <FaMoneyBillWave /> },
+    { title: 'Experiência Personalizada', desc: 'Cada interação é adaptada ao histórico e necessidades específicas do cliente', icon: <FaUsers /> },
+    { title: 'Decisões Mais Rápidas', desc: 'Insights e análises complexas entregues em segundos, não em dias', icon: <FaLightbulb /> },
+    { title: 'Escalabilidade Real', desc: 'Atenda 10x mais clientes sem aumentar proporcionalmente sua equipe', icon: <FaRocket /> },
+    { title: 'Zero Erros Humanos', desc: 'Informações sempre precisas, processos sempre seguidos corretamente', icon: <FaShieldAlt /> },
+    { title: 'Equipe Focada', desc: 'Libere seu time de tarefas repetitivas para trabalho estratégico e criativo', icon: <FaBrain /> },
+    { title: 'Aprendizado Contínuo', desc: 'Agentes evoluem com cada interação, ficando mais inteligentes ao longo do tempo', icon: <FaChartLine /> },
+  ]
+
+  return (
+    <section id="beneficios" className="py-20">
+      <div className="container-page">
+        <SectionTitle 
+          title="O Que Você Ganha com"
+          highlight="Agentes de IA"
+        />
+        
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {benefits.map((b, idx) => (
+            <div key={b.title} className="feature-card hover-elevate text-center" style={{ animationDelay: `${idx * 0.05}s` }}>
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-4 text-white text-xl">
               {b.icon}
             </div>
-            <h3 className="text-xl font-bold text-white">{b.t}</h3>
-            <p className="text-white/80 mt-2">{b.d}</p>
+              <h3 className="text-lg font-bold text-white mb-2">{b.title}</h3>
+              <p className="text-slate-300 text-sm">{b.desc}</p>
           </div>
         ))}
       </div>
-      <div className="mt-8 text-center">
-        <Button href="#contato">Garantir Esses Benefícios</Button>
+        
+        <div className="mt-12 text-center">
+          <Button href="#contato">Quero Esses Resultados</Button>
       </div>
     </div>
   </section>
 )
+}
 
-const HowItWorks = () => (
-  <section id="como-funciona" className="relative">
-    <div className="container-page py-14 md:py-20">
-      <SectionTitle title="Como funciona nossa implementação" />
-      
-      {/* Layout em fluxo vertical moderno */}
-      <div className="relative max-w-4xl mx-auto">
-        {/* Linha de fluxo vertical animada (visível apenas em desktop) */}
-        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 -translate-x-1/2 flow-line rounded-full" 
-             style={{ height: 'calc(100% - 80px)', top: '40px' }} />
+// ============================================
+// SEÇÃO: ESTATÍSTICAS DE IMPACTO
+// ============================================
+const Stats = () => {
+  const stats = [
+    { value: '24/7', label: 'Disponibilidade Ininterrupta', icon: <FaClock /> },
+    { value: '80%', label: 'Redução em Tempo de Resposta', icon: <FaRocket /> },
+    { value: '60%', label: 'Economia em Custos de Atendimento', icon: <FaMoneyBillWave /> },
+    { value: '95%', label: 'Satisfação do Cliente', icon: <FaThumbsUp /> },
+  ]
+
+  return (
+    <section className="py-20 bg-section-alt">
+      <div className="container-page">
+        <SectionTitle 
+          title="Estatísticas de"
+          highlight="Impacto"
+        />
         
-        <div className="space-y-6">
-          {[
-            { title: 'Diagnóstico', desc: 'Analisamos seus processos e identificamos oportunidades de alto ROI.', icon: '🔍', color: 'from-[#a78bfa] to-[#60a5fa]' },
-            { title: 'Planejamento Personalizado', desc: 'Roadmap sob medida com prioridades e projeção de resultados.', icon: '📋', color: 'from-[#60a5fa] to-[#22d3ee]' },
-            { title: 'Desenvolvimento Ágil', desc: 'Entregas incrementais com valor desde a primeira semana.', icon: '⚡', color: 'from-[#22d3ee] to-[#5eead4]' },
-            { title: 'Testes e Ajustes', desc: 'Validação em ambiente controlado com feedback do seu time.', icon: '🔧', color: 'from-[#5eead4] to-[#2a8dff]' },
-            { title: 'Go Live e Treinamento', desc: 'Operação e treinamento para monitoramento eficaz.', icon: '🚀', color: 'from-[#2a8dff] to-[#5a44e9]' },
-            { title: 'Suporte e Evolução', desc: 'Acompanhamento contínuo e evolução das automações.', icon: '📈', color: 'from-[#5a44e9] to-[#a78bfa]' },
-          ].map((step, idx) => (
-            <div key={step.title} className="relative flow-step">
-              {/* Card do passo */}
-              <div className={`relative ${idx % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'} md:w-[calc(50%-2rem)]`}>
-                <div className={`rounded-2xl p-[2px] bg-gradient-to-r ${step.color} hover-elevate`}>
-                  <div className="rounded-2xl bg-[#0b1020]/95 p-6 relative overflow-hidden">
-                    {/* Efeito de brilho no fundo */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <div className="relative flex items-start gap-4">
-                      {/* Número do passo */}
-                      <div className="flex-shrink-0">
-                        <div className={`h-12 w-12 rounded-xl bg-gradient-to-r ${step.color} flex items-center justify-center text-2xl font-bold text-white shadow-lg`}>
-                          {idx + 1}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          {stats.map((stat) => (
+            <div key={stat.label} className="stat-card hover-elevate">
+              <div className="text-4xl md:text-5xl font-extrabold text-gradient mb-2">{stat.value}</div>
+              <div className="text-slate-300 text-sm">{stat.label}</div>
                         </div>
+          ))}
                       </div>
-                      
-                      {/* Conteúdo */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-2xl">{step.icon}</span>
-                          <h3 className="text-xl font-bold text-white">{step.title}</h3>
                         </div>
-                        <p className="text-white/80 leading-relaxed">{step.desc}</p>
-                      </div>
-                    </div>
-                  </div>
+    </section>
+  )
+}
+
+// ============================================
+// SEÇÃO: COMO FUNCIONA A IMPLEMENTAÇÃO
+// ============================================
+const Implementation = () => {
+  const steps = [
+    { 
+      step: 1, 
+      title: 'Discovery', 
+      desc: 'Entendemos profundamente seu negócio, processos e necessidades específicas',
+      icon: <FaSearch />
+    },
+    { 
+      step: 2, 
+      title: 'Design do Agente', 
+      desc: 'Projetamos a personalidade, conhecimento e capacidades do seu agente personalizado',
+      icon: <FaPencilAlt />
+    },
+    { 
+      step: 3, 
+      title: 'Desenvolvimento Ágil', 
+      desc: 'Construímos e treinamos o agente com base nos seus dados e regras de negócio',
+      icon: <FaCode />
+    },
+    { 
+      step: 4, 
+      title: 'Testes Controlados', 
+      desc: 'Validamos performance em ambiente seguro com casos reais',
+      icon: <FaVial />
+    },
+    { 
+      step: 5, 
+      title: 'Go Live Gradual', 
+      desc: 'Implementamos progressivamente, garantindo estabilidade e ajustes',
+      icon: <FaPlay />
+    },
+    { 
+      step: 6, 
+      title: 'Evolução Contínua', 
+      desc: 'Monitoramos, otimizamos e expandimos capacidades conforme sua operação cresce',
+      icon: <FaSyncAlt />
+    },
+  ]
+
+  return (
+    <section id="implementacao" className="py-20">
+      <div className="container-page">
+        <SectionTitle 
+          title="Como Funciona a"
+          highlight="Implementação"
+        />
+        
+        <div className="max-w-3xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6">
+            {steps.map((step) => (
+              <div key={step.step} className="timeline-step">
+                <div className="timeline-dot">{step.step}</div>
+                <div className="feature-card h-full">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-primary text-xl">{step.icon}</span>
+                    <h3 className="text-lg font-bold text-white">{step.title}</h3>
                 </div>
-                
-                {/* Ponto de conexão na linha central com pulso (apenas desktop) */}
-                <div className="hidden md:block absolute top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-[#5a44e9] to-[#2a8dff] border-4 border-[#0b1020] shadow-lg flow-dot"
-                     style={{ 
-                       [idx % 2 === 0 ? 'left' : 'right']: 'calc(100% + 1rem)'
-                     }} />
-              </div>
-              
-              {/* Seta conectora (mobile) */}
-              {idx < 5 && (
-                <div className="md:hidden flex justify-center py-2">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#2a8dff]">
-                    <path d="M12 5V19M12 19L19 12M12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <p className="text-slate-300 text-sm">{step.desc}</p>
                 </div>
-              )}
             </div>
           ))}
         </div>
       </div>
       
-      <div className="mt-10 text-center">
-        <Button href="#contato">Quero Começar Agora</Button>
+        <div className="mt-12 text-center">
+          <Button href="#contato">Começar Minha Jornada</Button>
       </div>
     </div>
   </section>
 )
+}
 
-const WhyEdesoft = () => (
-  <section id="por-que-edesoft" className="relative">
-    <div className="absolute inset-0 bg-section-gradient/50" />
-    <div className="container-page relative py-14 md:py-20">
+// ============================================
+// SEÇÃO: POR QUE ESCOLHER A EDESOFT
+// ============================================
+const WhyEdesoft = () => {
+  const reasons = [
+    { 
+      title: '19 Anos Transformando TI', 
+      desc: 'Quase duas décadas entregando soluções tecnológicas que geram resultados reais para empresas de todos os portes',
+      icon: <FaAward />
+    },
+    { 
+      title: 'Expertise Multidisciplinar', 
+      desc: 'Time especializado em IA, desenvolvimento, data science e integração de sistemas complexos',
+      icon: <FaBrain />
+    },
+    { 
+      title: 'Agentes Personalizados', 
+      desc: 'Não trabalhamos com templates genéricos. Cada agente é desenvolvido sob medida para seu negócio',
+      icon: <FaRobot />
+    },
+    { 
+      title: 'Presença Global', 
+      desc: 'Atuamos no Brasil e Europa, com padrões internacionais de qualidade e segurança',
+      icon: <FaGlobe />
+    },
+    { 
+      title: 'Segurança e Conformidade', 
+      desc: 'Todas as soluções seguem LGPD e ISO 27001, garantindo proteção total dos seus dados',
+      icon: <FaShieldAlt />
+    },
+    { 
+      title: 'Suporte de Longo Prazo', 
+      desc: 'Não te abandonamos após o projeto. Evoluímos juntos, continuamente',
+      icon: <FaHandshake />
+    },
+  ]
+
+  const services = [
+    'RPA + Automação Inteligente',
+    'Modernização de Sistemas Legados',
+    'Squad as a Service',
+    'Data Analytics & BI',
+    'Outsourcing de TI',
+  ]
+
+  return (
+    <section id="edesoft" className="py-20 bg-section-alt">
+      <div className="container-page">
       <SectionTitle
-        title="Por que escolher a Edesoft?"
-        subtitle="19 anos transformando TI em ativo de negócio"
+          title="Por Que Escolher a"
+          highlight="Edesoft?"
       />
-      <div className="flex items-center justify-center mt-4 mb-8">
-        <img src="/logo-edesoft.svg" alt="Logo Edesoft" className="h-14 md:h-16 opacity-95" />
+        
+        <div className="flex justify-center mb-10">
+          <img src="/logo-edesoft.svg" alt="Logo Edesoft" className="h-14 md:h-16 opacity-90" />
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          { t: '19 Anos de Mercado', d: 'Décadas ajudando empresas a reduzir custos com tecnologia.', icon: <FaAward /> },
-          { t: 'Presença Global', d: 'Atuação no Brasil e Europa para empresas de todos os portes.', icon: <FaGlobe /> },
-          { t: 'Especialistas Certificados', d: 'Time com expertise em IA, dados, segurança e gestão.', icon: <FaCogs /> },
-          { t: 'Foco em Resultados', d: 'Entregamos resultados mensuráveis alinhados ao negócio.', icon: <FaChartLine /> },
-          { t: 'Segurança e Conformidade', d: 'Melhores práticas, LGPD e ISO 27001.', icon: <FaShieldAlt /> },
-          { t: 'Parceria de Longo Prazo', d: 'Relações duradouras com suporte e evolução contínua.', icon: <FaHandshake /> },
-        ].map((b) => (
-          <div key={b.t} className="rounded-2xl border-gradient bg-white/5 p-6 hover-elevate">
-            <div className="h-10 w-10 rounded-lg bg-gradient-primary text-white flex items-center justify-center mb-3">
-              {b.icon}
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {reasons.map((r) => (
+            <div key={r.title} className="feature-card hover-elevate">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4 text-white text-xl">
+                {r.icon}
             </div>
-            <h3 className="text-xl font-bold text-white">{b.t}</h3>
-            <p className="text-white/80 mt-2">{b.d}</p>
+              <h3 className="text-lg font-bold text-white mb-2">{r.title}</h3>
+              <p className="text-slate-300 text-sm">{r.desc}</p>
           </div>
         ))}
       </div>
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 items-stretch">
-        {[['19', 'Anos de Experiência'], ['200+', 'Projetos Entregues'], ['50+', 'Clientes Ativos'], ['95%', 'Taxa de Satisfação']].map(([n, l]) => (
-          <div key={n} className="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6 text-center hover-elevate flex flex-col justify-center min-h-[120px] sm:min-h-[140px]">
-            <div className="text-2xl sm:text-3xl font-extrabold text-white mb-2">{n}</div>
-            <div className="text-xs sm:text-sm text-white/80 leading-tight">{l}</div>
-          </div>
+        
+        {/* Outros serviços */}
+        <div className="max-w-3xl mx-auto">
+          <div className="card-premium p-8 text-center">
+            <h3 className="text-xl font-bold text-white mb-4">Além de Agentes de IA, Oferecemos:</h3>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {services.map((service) => (
+                <span key={service} className="px-4 py-2 rounded-full bg-white/8 text-slate-300 text-sm border border-white/10">
+                  {service}
+                </span>
         ))}
       </div>
-      <div className="mt-10 flex items-center justify-center">
+          </div>
+        </div>
+        
+        <div className="mt-10 text-center">
         <a href="https://edesoft.com.br" target="_blank" rel="noreferrer">
-          <Button>Conhecer a Edesoft</Button>
+            <Button variant="secondary">Conhecer a Edesoft</Button>
         </a>
       </div>
     </div>
   </section>
 )
+}
 
+// ============================================
+// SEÇÃO: VÍDEO
+// ============================================
 const VideoSection = () => {
   useEffect(() => {
-    // Carrega o script do Vimeo Player API se ainda não estiver carregado
     if (!document.querySelector('script[src="https://player.vimeo.com/api/player.js"]')) {
       const script = document.createElement('script')
       script.src = 'https://player.vimeo.com/api/player.js'
@@ -513,37 +730,30 @@ const VideoSection = () => {
   }, [])
 
   return (
-    <section id="video" className="relative">
-      <div className="absolute inset-0 bg-section-gradient/50" />
-      <div className="container-page relative py-14 md:py-20">
+    <section id="video" className="py-20">
+      <div className="container-page">
         <SectionTitle
-          title='"Meu vendedor não preenchia o CRM"'
-          subtitle="Veja como implementamos uma solução de agente de IA personalizado que transformou áudios de WhatsApp em dados estruturados no CRM"
+          title="Descubra Como Agentes de IA Estão"
+          highlight="Revolucionando Empresas"
+          subtitle="Nosso Presidente explica como essa tecnologia pode transformar sua operação"
         />
         
         <div className="max-w-4xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black/20 backdrop-blur-sm border border-white/10">
+          <div className="card-premium overflow-hidden">
             <div style={{padding:'56.25% 0 0 0', position:'relative'}}>
               <iframe 
-                src="https://player.vimeo.com/video/1129682251?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1" 
+                src="https://player.vimeo.com/video/1142480404?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1" 
                 frameBorder="0" 
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
                 referrerPolicy="strict-origin-when-cross-origin" 
                 style={{position:'absolute', top:0, left:0, width:'100%', height:'100%'}} 
-                title='"Meu vendedor não preenchia o CRM"'
+                title="Manoel Edesio - Agente de IA"
               />
             </div>
           </div>
           
-          <div className="mt-8 text-center">
-            <p className="text-white/80 text-lg max-w-2xl mx-auto">
-              Este é apenas um exemplo de como nossa tecnologia pode transformar processos manuais em automações inteligentes. 
-              <span className="text-white font-semibold"> Imagine o que podemos fazer pela sua empresa.</span>
-            </p>
-          </div>
-          
-          <div className="mt-8 text-center">
-            <Button href="#contato">Quero uma Solução Personalizada</Button>
+          <div className="mt-10 text-center">
+            <Button href="#contato">Quero Implementar na Minha Empresa</Button>
           </div>
         </div>
       </div>
@@ -551,38 +761,75 @@ const VideoSection = () => {
   )
 }
 
-const FAQ = () => (
-  <section id="faq" className="container-page py-14 md:py-20">
-    <SectionTitle title="Perguntas Frequentes" />
-    <div className="space-y-4">
-      {[
-        ['Quanto tempo leva para implementar RPA + IA?', 'Resultados nas primeiras 2-4 semanas. Projetos completos em 2 a 4 meses.'],
-        ['Preciso substituir meus sistemas atuais?', 'Não. Integramos aos seus sistemas existentes, sem grandes mudanças.'],
-        ['Minha equipe vai perder o emprego?', 'Não. Eliminamos tarefas repetitivas; foco em atividades estratégicas.'],
-        ['Qual o investimento necessário?', 'Modelos flexíveis. ROI em 6-12 meses via redução de custos.'],
-        ['E se meu processo mudar no futuro?', 'Automação flexível com suporte contínuo para evoluções.'],
-        ['Como garantem a segurança dos dados?', 'LGPD, ISO 27001, criptografia e processos auditáveis.'],
-        ['Vocês oferecem suporte após a implementação?', 'Sim. Suporte e evolução contínuos pós go-live.'],
-        ['Posso começar com um projeto piloto?', 'Recomendado. Valide resultados antes de escalar.'],
-        ['Quais tecnologias vocês utilizam?', 'Principais plataformas de RPA e agentes de IA personalizados.'],
-      ].map(([q, a]) => (
-        <details key={q as string} className="rounded-xl border border-white/10 bg-white/5 p-4">
-          <summary className="cursor-pointer text-white font-semibold">{q}</summary>
-          <p className="text-white/80 mt-2">{a as string}</p>
+// ============================================
+// SEÇÃO: FAQ
+// ============================================
+const FAQ = () => {
+  const faqs = [
+    {
+      q: 'Quanto tempo leva para ter um agente funcionando?',
+      a: 'Projetos piloto podem estar operacionais em 4-6 semanas. Implementações completas geralmente levam 2-3 meses, dependendo da complexidade e integrações necessárias.'
+    },
+    {
+      q: 'Preciso ter uma base de dados estruturada?',
+      a: 'Não necessariamente. Nossos agentes podem trabalhar com documentos, e-mails, PDFs e sistemas legados. Ajudamos a organizar e estruturar o conhecimento durante o projeto.'
+    },
+    {
+      q: 'O agente substitui minha equipe?',
+      a: 'Não. O agente aumenta a capacidade da sua equipe, liberando-a de tarefas repetitivas para focar em interações complexas e estratégicas que exigem empatia e criatividade humana.'
+    },
+    {
+      q: 'Como garantem que o agente não dá respostas erradas?',
+      a: 'Implementamos camadas de validação, regras de negócio e aprovação humana para decisões críticas. O agente também sinaliza quando não tem certeza e escalona para humanos.'
+    },
+    {
+      q: 'Posso integrar com meus sistemas atuais?',
+      a: 'Sim! Nossos agentes se conectam a ERPs, CRMs, bancos de dados e praticamente qualquer sistema via API ou integração customizada.'
+    },
+    {
+      q: 'Qual o investimento necessário?',
+      a: 'Varia conforme complexidade e escopo. Trabalhamos com modelos flexíveis e o ROI geralmente acontece em 6-12 meses considerando economia operacional e aumento de receita.'
+    },
+    {
+      q: 'E se meu negócio mudar?',
+      a: 'Agentes são treináveis e evoluem continuamente. Podemos adicionar novas capacidades, conhecimentos e integrações conforme seu negócio cresce.'
+    },
+  ]
+
+  return (
+    <section id="faq" className="py-20 bg-section-alt">
+      <div className="container-page">
+        <SectionTitle 
+          title="Perguntas"
+          highlight="Frequentes"
+        />
+        
+        <div className="max-w-3xl mx-auto space-y-4">
+          {faqs.map((faq) => (
+            <details key={faq.q} className="group card-premium p-5">
+              <summary className="cursor-pointer text-white font-semibold flex items-center justify-between">
+                <span>{faq.q}</span>
+              </summary>
+              <p className="text-slate-300 mt-4 leading-relaxed">{faq.a}</p>
         </details>
       ))}
     </div>
-    <div className="mt-8 text-center">
-      <Button href="#faq">Ainda Tenho Dúvidas</Button>
+        
+        <div className="mt-10 text-center">
+          <Button href="#contato">Tirar Minhas Dúvidas</Button>
+        </div>
     </div>
   </section>
 )
+}
 
+// ============================================
+// SEÇÃO: FORMULÁRIO DE CONTATO
+// ============================================
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
-    surname: '',
     company: '',
     position: '',
     email: '',
@@ -592,34 +839,20 @@ const Contact = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handlePhoneKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
-      e.preventDefault()
-    }
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '')
     if (value.length <= 11) {
-      setFormData(prev => ({
-        ...prev,
-        phone: value
-      }))
+      setFormData(prev => ({ ...prev, phone: value }))
     }
   }
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Google Analytics - Lead Generation
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('event', 'conversion', {
         'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL',
@@ -628,27 +861,41 @@ const Contact = () => {
       });
     }
 
-    // Meta Pixel - Lead Event
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Lead', {
-        content_name: 'Landing Page RPA + IA',
+        content_name: 'Landing Page Agentes IA',
         content_category: 'Lead Generation'
       });
     }
 
     try {
-      console.log('🔄 Enviando dados para API...')
+      // Obter token do reCAPTCHA
+      let recaptchaToken = ''
+      if (typeof window !== 'undefined' && window.grecaptcha?.enterprise) {
+        await new Promise<void>((resolve) => {
+          window.grecaptcha.enterprise.ready(async () => {
+            try {
+              recaptchaToken = await window.grecaptcha.enterprise.execute('6LdUEBIsAAAAAJY96i8YqKSzoybv_3BV4SLScrtt', { action: 'SUBMIT_FORM' })
+              resolve()
+            } catch (error) {
+              console.error('Erro ao executar reCAPTCHA:', error)
+              resolve()
+            }
+          })
+        })
+      }
+
       const requestData = {
         nome: formData.name,
-        sobrenome: formData.surname,
+        sobrenome: '',
         email: formData.email,
         telefone: formData.phone,
         mensagem: formData.message,
         empresa: formData.company,
         cargo: formData.position,
-        campanha: 'RPA'
+        campanha: 'AgentesIA',
+        recaptcha_token: recaptchaToken
       }
-      console.log('📤 Dados enviados:', requestData)
 
       const response = await fetch("https://edesoft.com.br/api/sendLeadCampaign", {
         method: "POST",
@@ -659,41 +906,24 @@ const Contact = () => {
         },
         body: JSON.stringify(requestData),
       })
-
-      console.log('📥 Resposta recebida:', response.status, response.statusText)
       
       setIsSubmitting(false)
       
       if (response.ok) {
-        const responseData = await response.json()
-        console.log('✅ Resposta de sucesso:', responseData)
         Swal.fire({
-          title: "Tudo certo",
-          text: "Sua mensagem foi enviada com sucesso.",
+          title: "Tudo certo!",
+          text: "Sua mensagem foi enviada com sucesso. Em breve entraremos em contato.",
           icon: "success",
         })
-        
-        // Limpar formulário
-        setFormData({
-          name: '',
-          surname: '',
-          company: '',
-          position: '',
-          email: '',
-          phone: '',
-          message: ''
-        })
+        setFormData({ name: '', company: '', position: '', email: '', phone: '', message: '' })
       } else {
-        const errorData = await response.json().catch(() => ({}))
-        console.error('❌ Erro na API:', response.status, response.statusText, errorData)
         Swal.fire({
           title: "Oops...",
           text: "Verifique seus dados e tente novamente mais tarde.",
           icon: "error",
         });
       }
-    } catch (error) {
-      console.error('❌ Erro na requisição:', error)
+    } catch {
       setIsSubmitting(false)
       Swal.fire({
         title: "Oops...",
@@ -704,114 +934,104 @@ const Contact = () => {
   }
 
   return (
-    <section id="contato" className="relative">
-      <div className="absolute inset-0 bg-gradient-deep opacity-80" />
-      <div className="container-page relative py-14 md:py-20">
+    <section id="contato" className="py-20 relative bg-section-alt overflow-hidden">
+      {/* Brushes decorativos */}
+      <div className="brush-top-right" />
+      <div className="brush-bottom-left" />
+      <div className="container-page relative">
         <SectionTitle
-          title="Pronto Para Automatizar Sua Operação?"
-          subtitle="Agende uma conversa sem compromisso e descubra como podemos reduzir seus custos"
+          title="Pronto Para Ter Seu"
+          highlight="Agente de IA Personalizado?"
+          subtitle="Agende uma demonstração e veja na prática como agentes inteligentes podem transformar sua operação"
         />
-        <form 
-          onSubmit={handleSubmit} 
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto px-4 md:px-0"
-        >
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Nome</label>
+        
+        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+          <div className="card-premium p-8 md:p-10">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm text-slate-300 mb-2">Nome Completo</label>
             <input 
               type="text" 
               name="name" 
               value={formData.name}
               onChange={handleInputChange}
               required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
-            />
-          </div>
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Sobrenome</label>
-            <input 
-              type="text" 
-              name="surname" 
-              value={formData.surname}
-              onChange={handleInputChange}
-              required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+                  className="w-full rounded-xl bg-[#0f172a] border border-white/10 px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors" 
             />
           </div>
           
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Empresa</label>
+              <div>
+                <label className="block text-sm text-slate-300 mb-2">Empresa</label>
             <input 
               type="text" 
               name="company" 
               value={formData.company}
               onChange={handleInputChange}
               required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+                  className="w-full rounded-xl bg-[#0f172a] border border-white/10 px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors" 
             />
           </div>
           
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Cargo</label>
+              <div>
+                <label className="block text-sm text-slate-300 mb-2">Cargo</label>
             <input 
               type="text" 
               name="position" 
               value={formData.position}
               onChange={handleInputChange}
               required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+                  className="w-full rounded-xl bg-[#0f172a] border border-white/10 px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors" 
             />
           </div>
           
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">E-mail Corporativo</label>
+              <div>
+                <label className="block text-sm text-slate-300 mb-2">E-mail Corporativo</label>
             <input 
               type="email" 
               name="email" 
               value={formData.email}
               onChange={handleInputChange}
               required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+                  className="w-full rounded-xl bg-[#0f172a] border border-white/10 px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors" 
             />
           </div>
           
-          <div className="md:col-span-1">
-            <label className="block text-sm text-white/80 mb-2 text-left">Telefone</label>
+              <div className="md:col-span-2">
+                <label className="block text-sm text-slate-300 mb-2">Telefone / WhatsApp</label>
             <input 
               type="tel" 
               name="phone" 
               value={formData.phone}
-              onChange={handleInputChange}
-              onKeyPress={handlePhoneKeyPress}
-              onInput={handlePhoneInput}
+                  onChange={handlePhoneInput}
               required 
-              pattern="[0-9]{2}[0-9]{4,5}[0-9]{4}"
-              maxLength={11}
               placeholder="11987654321"
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent]" 
+                  maxLength={11}
+                  className="w-full rounded-xl bg-[#0f172a] border border-white/10 px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors" 
             />
-            <p className="text-xs text-white/60 mt-1">Digite apenas números (ex: 11987654321)</p>
           </div>
           
           <div className="md:col-span-2">
-            <label className="block text-sm text-white/80 mb-2 text-left">Qual seu maior desafio operacional hoje?</label>
+                <label className="block text-sm text-slate-300 mb-2">Qual processo você gostaria de automatizar com IA?</label>
             <textarea 
               name="message" 
               value={formData.message}
               onChange={handleInputChange}
               required 
-              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[--accent] resize-none" 
               rows={4} 
+                  className="w-full rounded-xl bg-[#0f172a] border border-white/10 px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors resize-none" 
             />
+              </div>
           </div>
           
-          <div className="col-span-1 md:col-span-2 flex justify-center mt-4">
+            <div className="mt-8 text-center">
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className={`w-full sm:w-auto inline-block rounded-lg btn-gradient hover-glow text-white px-6 py-3 text-sm font-semibold shadow-md shadow-black/20 hover-elevate ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`btn-gradient rounded-xl px-10 py-4 font-bold text-base hover-glow hover-elevate ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              {isSubmitting ? 'Enviando...' : 'Quero uma Consultoria Gratuita'}
+                {isSubmitting ? 'Enviando...' : 'Quero uma Demonstração Gratuita'}
             </button>
+            </div>
           </div>
         </form>
       </div>
@@ -819,66 +1039,41 @@ const Contact = () => {
   )
 }
 
-const Footer = () => (
-  <footer className="relative mt-10 border-t border-white/10 overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-deep opacity-80" />
-    <div className="container-page relative py-8 text-center text-white/70">
-      © 2025 Edesoft - Transformando TI em Ativo Estratégico
+// ============================================
+// FOOTER
+// ============================================
+const Footer = () => {
+  return (
+    <footer className="border-t border-white/10 py-10  bg-[#0a0c14]">
+      <div className="container-page">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+          <img src="/logo-edesoft.svg" alt="Edesoft" className="h-8" />
+          <span className="text-slate-400 text-sm">© 2025 Edesoft - Transformando TI em Ativo Estratégico</span>
+        </div>
     </div>
   </footer>
 )
+}
 
-export default function App({}: SectionProps) {
+// ============================================
+// APP PRINCIPAL
+// ============================================
+export default function App() {
   return (
     <main>
       <Hero />
       <Problems />
-      <Solution />
-      <Pillars />
+      <Clients />
+      <AgentsIntro />
       <UseCases />
-      <Stats />
       <Benefits />
-      <HowItWorks />
+      <Stats />
+      <Implementation />
       <WhyEdesoft />
       <VideoSection />
       <FAQ />
       <Contact />
       <Footer />
-      {/* Botão flutuante de WhatsApp */}
-      <a
-        href={
-          'https://wa.me/551123072387?text=' +
-          encodeURIComponent('Olá! Vim pela landing page de RPA + IA e gostaria de saber como reduzir custos na minha operação.')
-        }
-        target="_blank"
-        rel="noreferrer"
-        onClick={() => {
-          // Google Analytics - WhatsApp Click
-          if (typeof window !== 'undefined' && window.gtag) {
-            window.gtag('event', 'whatsapp_click', {
-              'event_category': 'Contact',
-              'event_action': 'WhatsApp Click',
-              'event_label': 'Landing Page'
-            });
-          }
-          
-          // Meta Pixel - WhatsApp Click
-          if (typeof window !== 'undefined' && window.fbq) {
-            window.fbq('track', 'Contact', {
-              content_name: 'WhatsApp Click',
-              content_category: 'Contact'
-            });
-          }
-        }}
-        className="hidden fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-lg hover-elevate"
-        style={{
-          backgroundImage: 'linear-gradient(135deg,#25D366,#128C7E)'
-        }}
-        aria-label="Falar no WhatsApp"
-      >
-        <FaWhatsapp />
-        WhatsApp
-      </a>
     </main>
   )
 }

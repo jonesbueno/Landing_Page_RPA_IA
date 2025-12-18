@@ -1,4 +1,46 @@
-# React + TypeScript + Vite
+# Landing Page - Agentes de IA Autônomos
+
+Landing page desenvolvida para promover os Agentes de IA Autônomos da Edesoft.
+
+## 🌐 Deploy
+
+**Subdomínio:** `agentes.edesoft.com.br`  
+**URL:** https://agentes.edesoft.com.br
+
+## 🚀 Tecnologias
+
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Icons
+- SweetAlert2
+
+## 📦 Instalação
+
+```bash
+npm install
+```
+
+## 🛠️ Desenvolvimento
+
+```bash
+npm run dev
+```
+
+## 🏗️ Build para Produção
+
+```bash
+npm run build
+```
+
+## 📝 Sobre o Projeto
+
+Landing page focada em conversão para apresentar os Agentes de IA Autônomos da Edesoft, destacando casos de uso, benefícios e processo de implementação.
+
+---
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

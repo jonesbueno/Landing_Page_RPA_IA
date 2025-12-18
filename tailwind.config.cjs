@@ -7,15 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#5a44e9',
-        accent: '#2a8dff',
+        primary: '#22d3ee',
+        'primary-dark': '#0ea5e9',
+        accent: '#7c3aed',
       },
       boxShadow: {
-        card: '0 10px 30px rgba(17, 24, 39, 0.12)',
+        card: '0 10px 30px rgba(0, 0, 0, 0.25)',
+        glow: '0 0 30px rgba(34, 211, 238, 0.25)',
       },
       backgroundImage: {
-        'hero-gradient': 'linear-gradient(135deg, #5a44e9 0%, #2a8dff 100%)',
-        'section-gradient': 'linear-gradient(180deg, rgba(122,111,255,0.06) 0%, rgba(42,141,255,0.06) 100%)',
+        'hero-gradient': 'linear-gradient(135deg, #22d3ee 0%, #7c3aed 100%)',
       },
     },
   },
