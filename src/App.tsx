@@ -650,9 +650,32 @@ const Implementation = () => {
   ]
 
   return (
-    <section id="implementacao" className="py-20">
-      <div className="container-page">
-        <SectionTitle 
+    <section id="implementacao" className="py-20 relative overflow-hidden">
+      {/* Imagem do Fluxo com glow roxo - virada de lado */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] md:w-[800px] lg:w-[900px] h-auto pointer-events-none select-none hidden md:block">
+        {/* Glow roxo por trás */}
+        <div
+          className="absolute inset-0 blur-[120px] opacity-40"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.8) 0%, rgba(124, 58, 237, 0.3) 50%, transparent 70%)',
+            transform: 'scale(1.4)',
+          }}
+        />
+        {/* Imagem do fluxo */}
+        <img
+          src="/fluxo.png"
+          alt=""
+          className="relative w-full h-auto opacity-30"
+          style={{
+            transform: 'rotate(-15deg) scale(1.2)',
+            maskImage: 'linear-gradient(to left, black 30%, transparent 80%)',
+            WebkitMaskImage: 'linear-gradient(to left, black 30%, transparent 80%)',
+          }}
+        />
+      </div>
+
+      <div className="container-page relative z-10">
+        <SectionTitle
           title="Como Funciona a"
           highlight="Implementação"
         />
