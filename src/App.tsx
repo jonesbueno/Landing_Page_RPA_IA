@@ -77,25 +77,54 @@ const Hero = () => (
     {/* Brushes decorativos */}
     <div className="brush-top-right" />
     <div className="brush-bottom-left" />
-    
-    <div className="container-page relative py-20">
+
+    {/* Imagem do Robô com glow roxo */}
+    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] md:w-[600px] lg:w-[700px] h-auto pointer-events-none select-none hidden sm:block">
+      {/* Glow roxo por trás */}
+      <div
+        className="absolute inset-0 blur-[80px] opacity-60"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.8) 0%, rgba(124, 58, 237, 0.4) 40%, transparent 70%)',
+          transform: 'scale(1.2)',
+        }}
+      />
+      {/* Contorno roxo mais definido */}
+      <div
+        className="absolute inset-0 blur-[30px] opacity-50"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.9) 0%, rgba(124, 58, 237, 0.5) 30%, transparent 60%)',
+        }}
+      />
+      {/* Imagem do robô */}
+      <img
+        src="/advanced-robot-futuristic-setting.png"
+        alt=""
+        className="relative w-full h-auto opacity-70 mix-blend-lighten"
+        style={{
+          maskImage: 'linear-gradient(to left, black 50%, transparent 95%)',
+          WebkitMaskImage: 'linear-gradient(to left, black 50%, transparent 95%)',
+        }}
+      />
+    </div>
+
+    <div className="container-page relative py-20 z-10">
       <div className="max-w-5xl mx-auto text-center">
         <span className="badge mb-6 inline-flex">
-          <span className="h-2 w-2 rounded-full bg-[#22d3ee] animate-pulse" /> 
+          <span className="h-2 w-2 rounded-full bg-[#22d3ee] animate-pulse" />
           Agentes de IA Autônomos
         </span>
-        
+
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-[1.1] text-white">
           E Se Sua Empresa Tivesse{' '}
           <span className="text-gradient">Colaboradores Digitais</span>{' '}
           Trabalhando 24/7?
         </h1>
-        
+
         <p className="mt-6 md:mt-8 text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-          Agentes de IA autônomos que atendem clientes, analisam dados e executam 
+          Agentes de IA autônomos que atendem clientes, analisam dados e executam
           tarefas complexas com <span className="text-gradient font-semibold">precisão absoluta</span>.
         </p>
-        
+
         <div className="mt-10 flex flex-wrap gap-4 justify-center">
           <Button href="#contato">Quero Conhecer os Agentes de IA</Button>
           <Button href="#agentes" variant="secondary">Como Funciona?</Button>
