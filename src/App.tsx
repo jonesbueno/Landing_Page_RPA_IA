@@ -299,7 +299,37 @@ const AgentsIntro = () => {
 
   return (
     <section id="agentes" className="py-20 relative overflow-hidden">
-      <div className="container-page relative">
+      {/* Imagem do Robô Executivo com glow roxo */}
+      <div className="absolute left-0 top-1/4 w-[400px] md:w-[500px] lg:w-[600px] h-auto pointer-events-none select-none hidden lg:block">
+        {/* Glow roxo por trás */}
+        <div
+          className="absolute inset-0 blur-[100px] opacity-50"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(124, 58, 237, 0.9) 0%, rgba(124, 58, 237, 0.4) 40%, transparent 70%)',
+            transform: 'scale(1.3)',
+          }}
+        />
+        {/* Contorno roxo mais definido */}
+        <div
+          className="absolute inset-0 blur-[40px] opacity-40"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.8) 0%, rgba(124, 58, 237, 0.4) 30%, transparent 60%)',
+          }}
+        />
+        {/* Imagem do robô */}
+        <img
+          src="/futuristic-robot-interacting-with-money 2.png"
+          alt=""
+          className="relative w-full h-auto opacity-50"
+          style={{
+            filter: 'brightness(0.7) contrast(1.2)',
+            maskImage: 'linear-gradient(to right, black 40%, transparent 90%)',
+            WebkitMaskImage: 'linear-gradient(to right, black 40%, transparent 90%)',
+          }}
+        />
+      </div>
+
+      <div className="container-page relative z-10">
       <SectionTitle
           title="Conheça os Agentes de IA da"
           highlight="Edesoft"
